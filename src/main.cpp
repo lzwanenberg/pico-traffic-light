@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "factorial.hpp"
+#include "factorial/factorial.hpp"
 
 int main() {
     int result = Factorial(4);
