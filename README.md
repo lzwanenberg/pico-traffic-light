@@ -8,6 +8,7 @@ Study project for learning C++ and embedded programming.
 
 ## Prerequisites
 
+- Unix-like environment
 - [CMake](https://cmake.org/)
 
 ## Installation
