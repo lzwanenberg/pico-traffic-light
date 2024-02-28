@@ -13,7 +13,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(tests src/tests.cpp)
+add_executable(tests src/factorial.cpp src/factorial.test.cpp)
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 # --------------------------
 
@@ -22,5 +22,5 @@ target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 project(HelloWorld)
 
 # Add the executable
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/factorial.cpp src/main.cpp)
 # --------------------------
