@@ -1,4 +1,4 @@
-# Arduino Pico Traffic Light
+# Raspberry Pico Traffic Light
 
 Study project for learning C++ and embedded programming.
 
