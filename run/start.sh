@@ -1,1 +1,1 @@
-./build/HelloWorld
+./build/HelloWorld "$@"

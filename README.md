@@ -23,5 +23,6 @@ Study project for learning C++ and embedded programming.
 
 ```.sh
 ./run/test.sh # run the test suite
+./run/test.sh Factorial # run tests matching *Factorial* filter
 ./run/clean.sh # remove build directory
 ```
