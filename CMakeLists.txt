@@ -14,10 +14,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 set(MAIN_FILE "src/main.cpp")
-file(GLOB_RECURSE SRC_FILES "src/*.cpp")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX ".*\\.test\\.cpp$")
 list(FILTER SRC_FILES EXCLUDE REGEX "src/main.cpp")
-file(GLOB_RECURSE TEST_FILES "src/*.test.cpp")
+file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS "src/*.test.cpp")
 
 add_executable(tests ${SRC_FILES} ${TEST_FILES})
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

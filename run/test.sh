@@ -1,8 +1,10 @@
+#!/bin/bash
+
 param_count=$#
 tests_exec="./build/tests"
 
-if [ $param_count -eq 0 ]; then
-  "$tests_exec"
+if [[ $* == *--watch* ]]; then
+  python3 ./run/python/test-watcher.py
 else
-  "$tests_exec" -r compact -s "*$1*" "${@:2}"
+  "$tests_exec" "${@:1}"
 fi
