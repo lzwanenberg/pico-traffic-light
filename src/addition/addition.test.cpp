@@ -3,7 +3,7 @@
 
 #include "addition.hpp"
 
-TEST_CASE("Additions are computed", "[addition]") {
+TEST_CASE("Additions are computed") {
   REQUIRE(Addition(1, 1) == 2);
   REQUIRE(Addition(3, 6) == 9);
   REQUIRE(Addition(12, 17) == 29);

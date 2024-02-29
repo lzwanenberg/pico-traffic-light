@@ -3,7 +3,7 @@
 
 #include "substraction.hpp"
 
-TEST_CASE("Substractions are computed", "[substraction]") {
+TEST_CASE("Substractions are computed") {
   REQUIRE(Substraction(1, 1) == 0);
   REQUIRE(Substraction(6, 3) == 3);
   REQUIRE(Substraction(17, 12) == 5);
