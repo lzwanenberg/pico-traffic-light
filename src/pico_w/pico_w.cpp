@@ -1,5 +1,6 @@
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
+#include "hardware/gpio.h"
 
 const auto pico_sleep_ms = sleep_ms;
 

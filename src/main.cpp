@@ -1,32 +1,35 @@
 #include <iostream>
-#include "factorial/factorial.hpp"
-// #include "pico_w/pico_w.hpp"
 #include <stdio.h>
-#include "pico/stdlib.h"
-#include "pico/cyw43_arch.h"
-#include "hardware/gpio.h"
+#include "pico_w/gpio_writer.hpp"
+#include "pico_w/pico_w.hpp"
 
-#define RED_LED_PIN 0
-#define GREEN_LED_PIN 1
+#define YELLOW_LED_PIN 1
+#define GREEN_LED_PIN 2
+
+#define RED_TIME 8000
+#define GREEN_TIME 6000
+#define YELLOW_TIME 2200
 
 int main() {
-    int sleep_time_ms = Factorial(6);
-
-    gpio_init(RED_LED_PIN);
-    gpio_set_dir(RED_LED_PIN, GPIO_OUT);
-    gpio_pull_up(RED_LED_PIN);
-
-    gpio_init(GREEN_LED_PIN);
-    gpio_set_dir(GREEN_LED_PIN, GPIO_OUT);
-    gpio_pull_up(GREEN_LED_PIN);
+    PicoW::GPIOWriter gp0(PicoW::Pin::GP0);
+    PicoW::GPIOWriter gp1(PicoW::Pin::GP1);
+    PicoW::GPIOWriter gp2(PicoW::Pin::GP2);
 
     while (true)
     {
-        gpio_put(RED_LED_PIN, 1);
-        gpio_put(GREEN_LED_PIN, 0);
-        sleep_ms(sleep_time_ms);
-        gpio_put(RED_LED_PIN, 0);
-        gpio_put(GREEN_LED_PIN, 1);
-        sleep_ms(sleep_time_ms);
+        gp0.write(1);
+        gp1.write(0);
+        gp2.write(0);
+        PicoW::sleep_ms(RED_TIME);
+
+        gp0.write(0);
+        gp1.write(0);
+        gp2.write(1);
+        PicoW::sleep_ms(GREEN_TIME);
+
+        gp0.write(0);
+        gp1.write(1);
+        gp2.write(0);
+        PicoW::sleep_ms(YELLOW_TIME);
     }
 }
