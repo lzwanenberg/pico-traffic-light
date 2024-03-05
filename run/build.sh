@@ -1,5 +1,9 @@
 #!/bin/bash
 
-cd build
+cd build/release
 make "$@"
-cd ..
+cd ../..
+
+cd build/tests
+make "$@"
+cd ../..
