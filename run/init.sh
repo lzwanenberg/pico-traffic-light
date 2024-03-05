@@ -2,6 +2,5 @@
 
 mkdir build
 cd build
-cmake .. "$@"
+cmake -DPICO_BOARD=pico_w .. "$@"
 cd ..
-

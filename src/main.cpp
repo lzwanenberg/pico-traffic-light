@@ -1,38 +1,31 @@
 #include <iostream>
 
-// #include "factorial/factorial.hpp"
-// #include "addition/addition.hpp"
-// #include "substraction/substraction.hpp"
 #include "pico/stdlib.h"
+#include "pico/cyw43_arch.h"
+#include "factorial/factorial.hpp"
 
 int main() {
-    // int factorial_result = Factorial(4);
-    // int addition_result = Addition(2, 11);
-    // int substraction_result = Substraction(11, 2);
+    int factorial_result1 = Factorial(5);
+    int factorial_result2 = Factorial(6);
+    int factorial_result3 = Factorial(7);
 
-    // std::cout << "Hello, World!" <<std::endl;
-    // std::cout << "The factorial result of 4 is: " << factorial_result << std::endl;
-    // std::cout << "The addition result of 2 and 11 is: " << addition_result <<std::endl;
-    // std::cout << "The substraction result of 11 and 2 is: " << substraction_result <<std::endl;
-
-    const uint led_pin = 25;
-
-    // Initialize LED pin
-    gpio_init(led_pin); 
-    gpio_set_dir(led_pin, GPIO_OUT);
-
-    // Loop forever
-    while (true) {
-
-        gpio_put(led_pin, true);
-        sleep_ms(1000);
-        gpio_put(led_pin, false);
-        sleep_ms(400);
-        gpio_put(led_pin, true);
-        sleep_ms(1000);
-        gpio_put(led_pin, false);
-        sleep_ms(2000);
+    stdio_init_all();
+    if (cyw43_arch_init()) {
+        printf("Wi-Fi init failed");
+        return -1;
     }
-
-    return 0;
+    while (true) {
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+        sleep_ms(factorial_result1);
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+        sleep_ms(factorial_result1);
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+        sleep_ms(factorial_result2);
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+        sleep_ms(factorial_result2);
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+        sleep_ms(factorial_result3);
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+        sleep_ms(factorial_result3);
+    }
 }
