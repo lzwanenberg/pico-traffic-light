@@ -1,22 +1,10 @@
 cmake_minimum_required(VERSION 3.28.2)
 
-
 if(NOT TARGET)
     set(TARGET "release")
 endif()
 
 message("Building for target: ${TARGET}")
-
-project(pico-traffic-light C CXX ASM)
-
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
-
-set(MAIN_FILE "src/main.cpp")
-file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
-list(FILTER SRC_FILES EXCLUDE REGEX ".*\\.test\\.cpp$")
-list(FILTER SRC_FILES EXCLUDE REGEX "src/main.cpp")
-file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS "src/*.test.cpp")
 
 if ("${TARGET}" STREQUAL "tests")
   Include(FetchContent)
@@ -28,6 +16,19 @@ if ("${TARGET}" STREQUAL "tests")
   )
 
   FetchContent_MakeAvailable(Catch2)
+endif ()
+
+set(MAIN_FILE "src/main.cpp")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
+list(FILTER SRC_FILES EXCLUDE REGEX ".*\\.test\\.cpp$")
+list(FILTER SRC_FILES EXCLUDE REGEX "src/main.cpp")
+file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS "src/*.test.cpp")
+
+if ("${TARGET}" STREQUAL "tests")
+  project(pico-traffic-light C CXX ASM)
+
+  set(CMAKE_C_STANDARD 11)
+  set(CMAKE_CXX_STANDARD 17)
 
   add_executable(tests ${SRC_FILES} ${TEST_FILES})
   target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
@@ -37,7 +38,7 @@ if ("${TARGET}" STREQUAL "release")
   set(PICO_SDK_FETCH_FROM_GIT on)
   include(pico_sdk_import.cmake)
 
-  project(blink C CXX ASM)
+  project(pico-traffic-light C CXX ASM)
 
   set(CMAKE_C_STANDARD 11)
   set(CMAKE_CXX_STANDARD 17)
