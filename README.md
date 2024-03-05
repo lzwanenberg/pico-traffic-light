@@ -25,4 +25,5 @@ Study project for learning C++ and embedded programming.
 ./run/test.sh # run the test suite
 ./run/test.sh Factorial # run tests matching *Factorial* filter
 ./run/clean.sh # remove build directory
+./run/copy.sh # copy .uf2 file to Pico
 ```
