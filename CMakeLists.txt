@@ -19,10 +19,30 @@ if ("${TARGET}" STREQUAL "tests")
 endif ()
 
 set(MAIN_FILE "src/main.cpp")
+set(PICO_DIR "src/pico_w")
+
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX ".*\\.test\\.cpp$")
-list(FILTER SRC_FILES EXCLUDE REGEX "src/main.cpp")
+list(FILTER SRC_FILES EXCLUDE REGEX "${MAIN_FILE}")
+list(FILTER SRC_FILES EXCLUDE REGEX "${PICO_DIR}/*")
+file(GLOB_RECURSE PICO_FILES CONFIGURE_DEPENDS "${PICO_DIR}/*.cpp")
 file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS "src/*.test.cpp")
+
+
+message("SRC_FILES:")
+foreach(src_file ${SRC_FILES})
+    message("  ${src_file}")
+endforeach()
+
+message("PICO_FILES:")
+foreach(pico_file ${PICO_FILES})
+    message("  ${pico_file}")
+endforeach()
+
+message("TEST_FILES:")
+foreach(test_file ${TEST_FILES})
+    message("  ${test_file}")
+endforeach()
 
 if ("${TARGET}" STREQUAL "tests")
   project(pico-traffic-light C CXX ASM)
@@ -45,7 +65,7 @@ if ("${TARGET}" STREQUAL "release")
 
   pico_sdk_init()
 
-  add_executable(${PROJECT_NAME} ${SRC_FILES} ${MAIN_FILE})
+  add_executable(${PROJECT_NAME} ${PICO_FILES} ${SRC_FILES} ${MAIN_FILE})
 
   pico_add_extra_outputs(${PROJECT_NAME})
 
