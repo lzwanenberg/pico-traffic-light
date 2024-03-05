@@ -1,6 +1,8 @@
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
 
+const auto pico_sleep_ms = sleep_ms;
+
 namespace PicoW {
     bool initialize() {
         stdio_init_all();
@@ -12,9 +14,8 @@ namespace PicoW {
         return true;
     }
 
-    // TODO: fix naming collision
-    void my_sleep_ms(int ms) {
-        sleep_ms(ms);
+    void sleep_ms(int ms) {
+        pico_sleep_ms(ms);
     }
 
     namespace OnboardLED {

@@ -14,33 +14,28 @@ int main() {
 
     while (true) {
         PicoW::OnboardLED::turn_on();
-        PicoW::my_sleep_ms(factorial_result1);
+        PicoW::sleep_ms(factorial_result1);
         PicoW::OnboardLED::turn_off();
-        PicoW::my_sleep_ms(factorial_result1);
+        PicoW::sleep_ms(factorial_result1);
 
         PicoW::OnboardLED::turn_on();
-        PicoW::my_sleep_ms(factorial_result1);
+        PicoW::sleep_ms(factorial_result1);
         PicoW::OnboardLED::turn_off();
-        PicoW::my_sleep_ms(factorial_result1);
-
-        PicoW::OnboardLED::turn_on();
-        PicoW::my_sleep_ms(factorial_result1);
-        PicoW::OnboardLED::turn_off();
-        PicoW::my_sleep_ms(factorial_result1);
+        PicoW::sleep_ms(factorial_result1);
         
         PicoW::OnboardLED::turn_on();
-        PicoW::my_sleep_ms(factorial_result1);
+        PicoW::sleep_ms(factorial_result1);
         PicoW::OnboardLED::turn_off();
-        PicoW::my_sleep_ms(factorial_result1);
+        PicoW::sleep_ms(factorial_result1);
 
         PicoW::OnboardLED::turn_on();
-        PicoW::my_sleep_ms(factorial_result2);
+        PicoW::sleep_ms(factorial_result2);
         PicoW::OnboardLED::turn_off();
-        PicoW::my_sleep_ms(factorial_result2);
+        PicoW::sleep_ms(factorial_result2);
 
         PicoW::OnboardLED::turn_on();
-        PicoW::my_sleep_ms(factorial_result3);
+        PicoW::sleep_ms(factorial_result3);
         PicoW::OnboardLED::turn_off();
-        PicoW::my_sleep_ms(factorial_result3);
+        PicoW::sleep_ms(factorial_result3);
     }
 }
