@@ -107,26 +107,35 @@ TEST_CASE("PedestrianSignalHead") {
       }
 
       SECTION(".update") {
-        SECTION("flashes only green aspect ") {
+        SECTION("flashes green aspect") {
           DeviceControlMocks mocks;
           PedestrianSignalHead signalHead(createConfig(mocks, 500));
           signalHead.setState(State::FLASHING_GREEN);
           mocks.reset();
 
-          signalHead.update(400);
-          REQUIRE(mocks.red.calls.size() == 0);
+          signalHead.update(100);
           REQUIRE(mocks.green.calls.size() == 0);
 
-          signalHead.update(400);
-          REQUIRE(mocks.red.calls.size() == 0);
+          signalHead.update(300);
+          signalHead.update(300);
           REQUIRE(mocks.green.calls.size() == 1);
           REQUIRE(mocks.green.calls[0] == false);
           mocks.reset();
 
           signalHead.update(500);
-          REQUIRE(mocks.red.calls.size() == 0);
           REQUIRE(mocks.green.calls.size() == 1);
           REQUIRE(mocks.green.calls[0] == true);
+        }
+
+        SECTION("does not perform any more subsequent calls on red aspect") {
+          DeviceControlMocks mocks;
+          PedestrianSignalHead signalHead(createConfig(mocks, 500));
+          signalHead.setState(State::FLASHING_GREEN);
+          mocks.reset();
+
+          signalHead.update(1200);
+
+          REQUIRE(mocks.red.calls.size() == 0);
         }
       }
     }
