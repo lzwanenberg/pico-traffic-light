@@ -1,37 +1,49 @@
 #include "Aspect.hpp"
+#include "flasher/Flasher.hpp"
 #include <iostream>
 
 namespace TrafficControl {
+using Config = Aspect::Config;
 
-Aspect::Aspect(Config config) : config(config) {}
+Aspect::Aspect(Config config)
+    : config(config), state(State::OFF),
+      flasher({.intervalMs = config.flashingIntervalMs,
+               .onStateChange = createFlasherStateChangeHandler()}) {}
 
 void Aspect::setState(State state) {
-  // Additional validation or logic can be added here
-  config.controlFunc(state == State::ON);
+  this->state = state;
+
+  switch (this->state) {
+  case State::ON:
+    config.deviceControlFunction(true);
+    return;
+
+  case State::OFF:
+    config.deviceControlFunction(false);
+
+  case State::FLASHING:
+    flasher.start();
+    return;
+  }
 }
 
 void Aspect::update(int deltaTimeMs) {
-  // Example update logic
-  if (config.flashingIntervalMs > 0 && config.controlFunc) {
-    // Perform some action based on the current state
-    switch (config.flashingIntervalMs) {
-    case State::OFF:
-      std::cout << "Aspect is OFF\n";
-      break;
-    case State::ON:
-      std::cout << "Aspect is ON\n";
-      break;
-    case State::FLASHING:
-      std::cout << "Aspect is FLASHING\n";
-      break;
-    default:
-      std::cout << "Invalid state\n";
-      break;
-    }
-  }
+  if (state != State::FLASHING)
+    return;
 
-  // Example usage of deltaTimeMs
-  std::cout << "Updating Aspect with deltaTimeMs: " << deltaTimeMs << " ms\n";
+  flasher.update(deltaTimeMs);
 }
 
+Flasher::StateChangeCallback Aspect::createFlasherStateChangeHandler() {
+  return std::bind(&Aspect::handleFlasherStateChange, this,
+                   std::placeholders::_1);
+}
+
+void Aspect::handleFlasherStateChange(Flasher::State flasher_state) {
+  if (state != State::FLASHING)
+    return;
+
+  bool value = flasher_state == Flasher::State::ON;
+  config.deviceControlFunction(value);
+}
 } // namespace TrafficControl
