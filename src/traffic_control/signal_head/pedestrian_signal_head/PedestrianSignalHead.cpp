@@ -22,7 +22,7 @@ void PedestrianSignalHead::setState(State state) {
     aspects.green.setState(Aspect::ON);
     return;
 
-  case FLASHING_GREEN:
+  case GREEN_FLASHING:
     aspects.red.setState(Aspect::OFF);
     aspects.green.setState(Aspect::FLASHING);
     return;

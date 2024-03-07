@@ -26,7 +26,7 @@ public:
 
     /** Pedestrian signal for flashing green light. Crossing period ending soon.
      */
-    FLASHING_GREEN
+    GREEN_FLASHING
   };
 
   /**
