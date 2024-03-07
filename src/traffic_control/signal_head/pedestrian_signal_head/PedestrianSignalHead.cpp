@@ -12,12 +12,12 @@ PedestrianSignalHead::PedestrianSignalHead(Config config)
 
 void PedestrianSignalHead::setState(State state) {
   switch (state) {
-  case RED_NON_FLASHING:
+  case RED_CONTINUOUS:
     aspects.red.setState(Aspect::ON);
     aspects.green.setState(Aspect::OFF);
     return;
 
-  case GREEN_NON_FLASHING:
+  case GREEN_CONTINUOUS:
     aspects.red.setState(Aspect::OFF);
     aspects.green.setState(Aspect::ON);
     return;

@@ -14,50 +14,33 @@ public:
    * @brief Enumeration representing the states of the pedestrian signal head.
    *
    * The `State` enum represents the possible states of the pedestrian signal
-   * head, including the non-flashing states for pedestrians to cross.
+   * head, including the continuous states for pedestrians to cross.
    */
   enum State {
-    /** Pedestrian signal for non-flashing red light. Pedestrians may not cross.
+    /** Pedestrian signal for continuous red light. Pedestrians may not cross.
      */
-    RED_NON_FLASHING,
-    /** Pedestrian signal for non-flashing green light. Pedestrians may cross.
-     */
-    GREEN_NON_FLASHING,
+    RED_CONTINUOUS,
+
+    /** Pedestrian signal for continuous green light. Pedestrians may cross. */
+    GREEN_CONTINUOUS,
+
     /** Pedestrian signal for flashing green light. Crossing period ending soon.
      */
     FLASHING_GREEN
   };
 
   /**
-   * @brief Structure defining the control functions for red and green aspects.
-   *
-   * The `AspectControlFunctions` struct defines the device control functions
-   * for the red and green aspects of the pedestrian signal head.
-   */
-  struct AspectControlFunctions {
-    Aspect::DeviceControlFunction red;
-    Aspect::DeviceControlFunction green;
-  };
-
-  /**
    * @brief Configuration structure for initializing the pedestrian signal head.
    */
   struct Config {
-    /**< Flashing interval in milliseconds */
+    /** Flashing interval in milliseconds */
     int flashingIntervalMs;
-    /**< Device control functions for red and green aspects */
-    AspectControlFunctions deviceControls;
-  };
 
-  /**
-   * @brief Structure representing the red and green aspects of the signal head.
-   *
-   * The `Aspects` struct holds instances of the red and green aspects
-   * controlled by the pedestrian signal head.
-   */
-  struct Aspects {
-    Aspect red;
-    Aspect green;
+    /** Device control functions for red and green aspects */
+    struct AspectControlFunctions {
+      Aspect::DeviceControlFunction red;
+      Aspect::DeviceControlFunction green;
+    } deviceControls;
   };
 
   /**
@@ -87,6 +70,11 @@ public:
   void update(int deltaTimeMs);
 
 private:
+  struct Aspects {
+    Aspect red;
+    Aspect green;
+  };
+
   Aspects aspects;
 };
 } // namespace TrafficControl

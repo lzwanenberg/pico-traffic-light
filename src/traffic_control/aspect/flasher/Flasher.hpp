@@ -27,10 +27,10 @@ public:
    * when the state changes.
    */
   struct Config {
-    /**< Interval between state changes in milliseconds */
+    /** Interval between state changes in milliseconds */
     int intervalMs;
 
-    /**< Callback function to handle state changes */
+    /** Callback function to handle state changes */
     StateChangeCallback onStateChange;
   };
 

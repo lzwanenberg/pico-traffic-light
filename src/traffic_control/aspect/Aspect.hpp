@@ -38,10 +38,10 @@ public:
    * to control the physical device.
    */
   struct Config {
-    /**< Flashing interval in milliseconds */
+    /** Flashing interval in milliseconds */
     int flashingIntervalMs;
 
-    /**< Device control function */
+    /** Device control function */
     DeviceControlFunction deviceControlFunction;
   };
 

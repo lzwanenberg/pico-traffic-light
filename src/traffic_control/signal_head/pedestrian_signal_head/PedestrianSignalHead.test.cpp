@@ -37,12 +37,12 @@ Config createConfig(DeviceControlMocks &mocks, int flashingIntervalMs = 500) {
 
 TEST_CASE("PedestrianSignalHead") {
   SECTION(".setState") {
-    SECTION("State::RED_NON_FLASHING") {
+    SECTION("State::RED_CONTINUOUS") {
       SECTION("it sets red aspect to State::ON") {
         DeviceControlMocks mocks;
         PedestrianSignalHead signalHead(createConfig(mocks));
 
-        signalHead.setState(State::RED_NON_FLASHING);
+        signalHead.setState(State::RED_CONTINUOUS);
 
         REQUIRE(mocks.red.calls.size() == 1);
         REQUIRE(mocks.red.calls[0] == true);
@@ -54,7 +54,7 @@ TEST_CASE("PedestrianSignalHead") {
         SECTION("does not perform any more subsequent calls") {
           DeviceControlMocks mocks;
           PedestrianSignalHead signalHead(createConfig(mocks, 500));
-          signalHead.setState(State::RED_NON_FLASHING);
+          signalHead.setState(State::RED_CONTINUOUS);
           mocks.reset();
 
           signalHead.update(1200);
@@ -65,12 +65,12 @@ TEST_CASE("PedestrianSignalHead") {
       }
     }
 
-    SECTION("State::GREEN_NON_FLASHING") {
+    SECTION("State::GREEN_CONTINUOUS") {
       SECTION("it sets red aspect to State::ON") {
         DeviceControlMocks mocks;
         PedestrianSignalHead signalHead(createConfig(mocks));
 
-        signalHead.setState(State::GREEN_NON_FLASHING);
+        signalHead.setState(State::GREEN_CONTINUOUS);
 
         REQUIRE(mocks.red.calls.size() == 1);
         REQUIRE(mocks.red.calls[0] == false);
@@ -82,7 +82,7 @@ TEST_CASE("PedestrianSignalHead") {
         SECTION("does not perform any more subsequent calls") {
           DeviceControlMocks mocks;
           PedestrianSignalHead signalHead(createConfig(mocks, 500));
-          signalHead.setState(State::GREEN_NON_FLASHING);
+          signalHead.setState(State::GREEN_CONTINUOUS);
           mocks.reset();
 
           signalHead.update(1200);
