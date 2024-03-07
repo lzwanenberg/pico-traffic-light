@@ -1,3 +1,4 @@
+#pragma once
 #include "../../aspect/Aspect.hpp"
 
 namespace TrafficControl {

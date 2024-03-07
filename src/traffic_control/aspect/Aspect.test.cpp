@@ -3,6 +3,7 @@
 
 #include "Aspect.hpp"
 
+namespace {
 using Aspect = TrafficControl::Aspect;
 using Config = Aspect::Config;
 using State = Aspect::State;
@@ -110,3 +111,4 @@ TEST_CASE("Aspect") {
     }
   }
 }
+} // namespace

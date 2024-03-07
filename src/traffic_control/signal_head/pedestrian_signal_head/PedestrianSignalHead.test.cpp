@@ -4,11 +4,13 @@
 #include "../../aspect/Aspect.hpp"
 #include "PedestrianSignalHead.hpp"
 
+namespace {
 using Aspect = TrafficControl::Aspect;
 using PedestrianSignalHead = TrafficControl::PedestrianSignalHead;
 using Config = PedestrianSignalHead::Config;
 using State = PedestrianSignalHead::State;
 
+namespace {
 class DeviceControlMock {
 public:
   std::vector<bool> calls;
@@ -26,7 +28,8 @@ public:
   }
 };
 
-Config createConfig(DeviceControlMocks &mocks, int flashingIntervalMs = 500) {
+static Config createConfig(DeviceControlMocks &mocks,
+                           int flashingIntervalMs = 500) {
   return {.flashingIntervalMs = flashingIntervalMs,
           .deviceControls = {
               .red = [&aspect = mocks.red](
@@ -34,6 +37,7 @@ Config createConfig(DeviceControlMocks &mocks, int flashingIntervalMs = 500) {
               .green = [&aspect = mocks.green](
                            bool state) { aspect.controlDevice(state); }}};
 }
+} // namespace
 
 TEST_CASE("PedestrianSignalHead") {
   SECTION(".setState") {
@@ -141,3 +145,4 @@ TEST_CASE("PedestrianSignalHead") {
     }
   }
 }
+} // namespace

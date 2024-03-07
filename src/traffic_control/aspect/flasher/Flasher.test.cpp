@@ -5,6 +5,7 @@
 
 #include "Flasher.hpp"
 
+namespace {
 using Flasher = TrafficControl::Flasher;
 using Config = Flasher::Config;
 
@@ -89,3 +90,4 @@ TEST_CASE("Flasher") {
     }
   }
 }
+} // namespace
