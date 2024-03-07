@@ -8,7 +8,7 @@ namespace TrafficControl {
  * @brief Represents a single lighting device on a signal head.
  *
  * The Aspect class represents an individual aspect of a signal head,
- * such as a single light that can be turned on, off, or set to a flashing
+ * which is a single light that can be turned on, off, or set to a flashing
  * mode. The behavior of the Aspect is controlled by calling setState to
  * change its state, and update is used to handle the flashing loop
  * based on a configured interval.
