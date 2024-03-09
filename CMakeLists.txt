@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.28.2)
 
+function(print_file_list FILE_LIST_NAME)
+    message("${FILE_LIST_NAME}:")
+    foreach(FILE ${${FILE_LIST_NAME}})
+        message("  ${FILE}")
+    endforeach()
+endfunction()
+
 if(NOT TARGET)
     set(TARGET "release")
 endif()
@@ -25,24 +32,21 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX ".*\\.test\\.cpp$")
 list(FILTER SRC_FILES EXCLUDE REGEX "${MAIN_FILE}")
 list(FILTER SRC_FILES EXCLUDE REGEX "${PICO_DIR}/*")
-file(GLOB_RECURSE PICO_FILES CONFIGURE_DEPENDS "${PICO_DIR}/*.cpp")
+
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "src/*.hpp")
+list(FILTER HEADER_FILES EXCLUDE REGEX ".*\\.test\\.hpp$")
+list(FILTER HEADER_FILES EXCLUDE REGEX "${MAIN_FILE}")
+list(FILTER HEADER_FILES EXCLUDE REGEX "${PICO_DIR}/*")
+
+file(GLOB_RECURSE PICO_HEADER_FILES CONFIGURE_DEPENDS "${PICO_DIR}/*.hpp")
+file(GLOB_RECURSE PICO_SRC_FILES CONFIGURE_DEPENDS "${PICO_DIR}/*.cpp")
 file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS "src/*.test.cpp")
 
-
-message("SRC_FILES:")
-foreach(src_file ${SRC_FILES})
-    message("  ${src_file}")
-endforeach()
-
-message("PICO_FILES:")
-foreach(pico_file ${PICO_FILES})
-    message("  ${pico_file}")
-endforeach()
-
-message("TEST_FILES:")
-foreach(test_file ${TEST_FILES})
-    message("  ${test_file}")
-endforeach()
+print_file_list(HEADER_FILES)
+print_file_list(SRC_FILES)
+print_file_list(PICO_HEADER_FILES)
+print_file_list(PICO_SRC_FILES)
+print_file_list(TEST_FILES)
 
 if ("${TARGET}" STREQUAL "tests")
   project(pico-traffic-light C CXX ASM)
@@ -50,7 +54,7 @@ if ("${TARGET}" STREQUAL "tests")
   set(CMAKE_C_STANDARD 11)
   set(CMAKE_CXX_STANDARD 17)
 
-  add_executable(tests ${SRC_FILES} ${TEST_FILES})
+  add_executable(tests ${HEADER_FILES} ${SRC_FILES} ${TEST_FILES})
   target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 endif ()
 
@@ -65,7 +69,7 @@ if ("${TARGET}" STREQUAL "release")
 
   pico_sdk_init()
 
-  add_executable(${PROJECT_NAME} ${PICO_FILES} ${SRC_FILES} ${MAIN_FILE})
+  add_executable(${PROJECT_NAME} ${PICO_HEADERFILES} ${PICO_SRC_FILES} ${HEADER_FILES} ${SRC_FILES} ${MAIN_FILE})
 
   pico_add_extra_outputs(${PROJECT_NAME})
 

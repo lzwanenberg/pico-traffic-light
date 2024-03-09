@@ -1,41 +1,10 @@
 #pragma once
 #include "../../aspect/Aspect.hpp"
+#include "IVehicularTrafficSignalHead.hpp"
 
 namespace TrafficControl {
-/**
- * @brief Represents a vehicular traffic signal head controlling traffic lights.
- *
- * The `VehicularTrafficSignalHead` class represents a signal head that controls
- * vehicular traffic lights. It manages three aspects: red, amber, and green.
- */
-class VehicularTrafficSignalHead {
+class VehicularTrafficSignalHead : public IVehicularTrafficSignalHead  {
 public:
-  /**
-   * @brief Enumeration representing the states of the vehicular traffic signal
-   * head.
-   *
-   * The `State` enum represents the possible states of the vehicular traffic
-   * signal head.
-   */
-  enum State {
-    /** Signal for continuous red light, indicating traffic must stop. */
-    RED_CONTINUOUS,
-
-    /** Signal for continuous amber light, indicating caution for traffic. */
-    AMBER_CONTINUOUS,
-
-    /** Signal for continuous green light, indicating traffic may proceed. */
-    GREEN_CONTINUOUS,
-
-    /** Signal for flashing red light, indicating special conditions for
-       traffic. */
-    RED_FLASHING,
-
-    /** Signal for flashing amber light, indicating traffic may proceed with
-       caution */
-    AMBER_FLASHING
-  };
-
   /**
    * @brief Configuration structure for initializing the vehicular traffic
    * signal head.
@@ -53,8 +22,8 @@ public:
   };
 
   VehicularTrafficSignalHead(Config config);
-  void setState(State state);
-  void update(int deltaTimeMs);
+  void setState(State state) override;
+  void update(int deltaTimeMs) override;
 
 private:
   struct Aspects {

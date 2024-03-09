@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../signal_head/pedestrian_signal_head/PedestrianSignalHead.hpp"
-#include "../../../signal_head/vehicular_traffic_signal_head/VehicularTrafficSignalHead.hpp"
+#include "../../../signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
 #include "../../phase_steps/PhaseSteps.hpp"
 
 namespace TrafficControl {
@@ -10,7 +10,7 @@ public:
 
   struct Config {
     FinishedCallback onFinished;
-    VehicularTrafficSignalHead vehicularSignalHead;
+    IVehicularTrafficSignalHead* vehicularSignalHead;
     struct Timings {
       int minimumRecallMs;
       int amberClearanceTimeMs;

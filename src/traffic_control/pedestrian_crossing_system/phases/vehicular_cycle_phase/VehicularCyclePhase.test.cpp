@@ -8,8 +8,8 @@
 namespace {
 using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
 using Config = VehicularCyclePhase::Config;
-using VehicularTrafficSignalHead = TrafficControl::VehicularTrafficSignalHead;
-using State = VehicularTrafficSignalHead::State;
+using IVehicularTrafficSignalHead = TrafficControl::IVehicularTrafficSignalHead;
+using State = IVehicularTrafficSignalHead::State;
 
 class FunctionMock {
 public:
@@ -39,31 +39,31 @@ public:
 
 // -----------------------------------------
 
-class VehicularTrafficSignalHeadMock : public VehicularTrafficSignalHead {
-public:
-  VehicularTrafficSignalHeadMock(Config config)
-      : VehicularTrafficSignalHead(config) {}
+// class VehicularTrafficSignalHeadMock : public IVehicularTrafficSignalHead {
+// public:
+//   VehicularTrafficSignalHeadMock(Config config)
+//       : VehicularTrafficSignalHead(config) {}
 
-  std::vector<State> setStateCalls;
-  std::vector<int> updateCalls;
+//   std::vector<State> setStateCalls;
+//   std::vector<int> updateCalls;
 
-  void setState(State state) { setStateCalls.push_back(state); }
-  void update(int deltaTimeMs) { updateCalls.push_back(deltaTimeMs); }
-};
+//   void setState(State state) { setStateCalls.push_back(state); }
+//   void update(int deltaTimeMs) { updateCalls.push_back(deltaTimeMs); }
+// };
 
-// =====================================================
+// // =====================================================
 
-static VehicularTrafficSignalHead::Config
-createConfig(DeviceControlMocks &mocks, int flashingIntervalMs = 500) {
-  return {.flashingIntervalMs = flashingIntervalMs,
-          .deviceControls = {
-              .red = [&aspect = mocks.red](
-                         bool state) { aspect.controlDevice(state); },
-              .amber = [&aspect = mocks.amber](
-                           bool state) { aspect.controlDevice(state); },
-              .green = [&aspect = mocks.green](
-                           bool state) { aspect.controlDevice(state); }}};
-}
+// static VehicularTrafficSignalHead::Config
+// createConfig(DeviceControlMocks &mocks, int flashingIntervalMs = 500) {
+//   return {.flashingIntervalMs = flashingIntervalMs,
+//           .deviceControls = {
+//               .red = [&aspect = mocks.red](
+//                          bool state) { aspect.controlDevice(state); },
+//               .amber = [&aspect = mocks.amber](
+//                            bool state) { aspect.controlDevice(state); },
+//               .green = [&aspect = mocks.green](
+//                            bool state) { aspect.controlDevice(state); }}};
+// }
 
 TEST_CASE("VehicularCyclePhase") {
   SECTION(".start") {

@@ -4,7 +4,7 @@
 
 namespace TrafficControl {
 
-using State = VehicularTrafficSignalHead::State;
+using State = IVehicularTrafficSignalHead::State;
 
 VehicularCyclePhase::VehicularCyclePhase(Config config)
     : steps(PhaseSteps{
@@ -13,19 +13,19 @@ VehicularCyclePhase::VehicularCyclePhase(Config config)
                    {.durationMs = config.timings.minimumRecallMs,
                     .executionFunction =
                         [config]() mutable {
-                          config.vehicularSignalHead.setState(
+                          config.vehicularSignalHead->setState(
                               State::GREEN_CONTINUOUS);
                         }},
                    {.durationMs = config.timings.amberClearanceTimeMs,
                     .executionFunction =
                         [config]() mutable {
-                          config.vehicularSignalHead.setState(
+                          config.vehicularSignalHead->setState(
                               State::AMBER_CONTINUOUS);
                         }},
                    {.durationMs = config.timings.redClearanceTimeMs,
                     .executionFunction =
                         [config]() mutable {
-                          config.vehicularSignalHead.setState(
+                          config.vehicularSignalHead->setState(
                               State::RED_CONTINUOUS);
                         }},
                },
