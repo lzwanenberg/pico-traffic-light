@@ -10,48 +10,53 @@ namespace {
 using namespace fakeit;
 using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
 using Config = VehicularCyclePhase::Config;
-using OtherConfig = VehicularCyclePhase::Config;
+using FinishedCallback = VehicularCyclePhase::FinishedCallback;
 using IVehicularTrafficSignalHead = TrafficControl::IVehicularTrafficSignalHead;
 using State = IVehicularTrafficSignalHead::State;
 
-class FunctionMock {
+class FinishedCallbackWrapper {
 public:
-  int calls = 0;
-  void call() { calls++; };
+  FinishedCallbackWrapper() = default;
+  virtual ~FinishedCallbackWrapper() = default;
+
+  virtual void operator()() = 0;
 };
 
-class VehicularTrafficSignalHeadMock : public IVehicularTrafficSignalHead {
+class FinishedCallbackWrapperImpl : public FinishedCallbackWrapper {
 public:
-  int calls = 0;
+  FinishedCallbackWrapperImpl(std::function<void()> func) : func_(func) {}
 
-  void setState(State state) override { calls++; };
+  void operator()() override { func_(); }
 
-  void update(int deltaTimeMs) override{
-      // TODO
-  };
+private:
+  std::function<void()> func_;
 };
 
 TEST_CASE("VehicularCyclePhase") {
   SECTION(".start") {
     SECTION("it set states GREEN_CONTINUOUS") {
+      auto onFinishedMock = std::make_shared<Mock<FinishedCallbackWrapper>>();
+
       Mock<IVehicularTrafficSignalHead> vehicularSignalHeadMock;
-      When(Method(vehicularSignalHeadMock, setState)).Return();
       IVehicularTrafficSignalHead &vehicularSignalHead =
           vehicularSignalHeadMock.get();
 
-      FunctionMock onFinished;
-      // VehicularTrafficSignalHeadMock vehicularSignalHead;
-      Config config = {.onFinished = [&onFinished] { onFinished.call(); },
-                       .vehicularSignalHead = &vehicularSignalHead,
-                       .timings = {.minimumRecallMs = 5000,
-                                   .amberClearanceTimeMs = 2000,
-                                   .redClearanceTimeMs = 1000}};
-
+      Config config = {
+          .onFinished =
+              [onFinishedMock] { (*onFinishedMock).get().operator()(); },
+          .vehicularSignalHead = &vehicularSignalHead,
+          .timings = {.minimumRecallMs = 5000,
+                      .amberClearanceTimeMs = 2000,
+                      .redClearanceTimeMs = 1000}};
       VehicularCyclePhase phase(config);
+
+      When(Method(*onFinishedMock, operator())).Return();
+      When(Method(vehicularSignalHeadMock, setState)).Return();
 
       phase.start();
 
       Verify(Method(vehicularSignalHeadMock, setState)).Exactly(1);
+      Verify(Method(*onFinishedMock, operator())).Exactly(0);
     }
   }
 }
