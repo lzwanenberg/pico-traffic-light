@@ -14,16 +14,20 @@ public:
 
   struct Config {
     std::vector<PhaseStep> steps;
-    FinishedCallback onFinished;
   };
 
   PhaseSteps(Config config);
+
+  void registerFinishedListener(FinishedCallback *callback);
   void start();
   void update(int deltaTimeMs);
 
 private:
-  Config config;
+  std::vector<PhaseStep> steps;
+  FinishedCallback *finishedCallback;
   int currentStepIndex;
   int elapsedTime;
+
+  void triggerFinishedCallback();
 };
 } // namespace TrafficControl
