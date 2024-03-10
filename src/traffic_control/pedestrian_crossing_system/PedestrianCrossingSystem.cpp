@@ -1,4 +1,5 @@
 #include "PedestrianCrossingSystem.hpp"
+#include <functional>
 
 namespace TrafficControl {
 
@@ -6,12 +7,29 @@ using State = IVehicularTrafficSignalHead::State;
 using Config = PedestrianCrossingSystem::Config;
 
 PedestrianCrossingSystem::PedestrianCrossingSystem(Config config)
-    : config(config) {}
+    : vehicularPhase(config.vehicularPhase),
+      pedestrianPhase(config.pedestrianPhase) {
 
-void PedestrianCrossingSystem::start() {}
+  vehicularPhase->registerFinishedListener(new std::function<void()>(std::bind(
+      &PedestrianCrossingSystem::handleVehicularPhaseFinished, this)));
+
+  pedestrianPhase->registerFinishedListener(new std::function<void()>(std::bind(
+      &PedestrianCrossingSystem::handlePedestrianPhaseFinished, this)));
+}
+
+void PedestrianCrossingSystem::start() { vehicularPhase->start(); }
 
 void PedestrianCrossingSystem::update(int deltaTimeMs) {
-  // TODO
+  vehicularPhase->update(deltaTimeMs);
+  pedestrianPhase->update(deltaTimeMs);
+}
+
+void PedestrianCrossingSystem::handleVehicularPhaseFinished() {
+  pedestrianPhase->start();
+}
+
+void PedestrianCrossingSystem::handlePedestrianPhaseFinished() {
+  vehicularPhase->start();
 }
 
 } // namespace TrafficControl
