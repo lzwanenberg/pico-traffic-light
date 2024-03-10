@@ -3,7 +3,7 @@
 #include "IVehicularTrafficSignalHead.hpp"
 
 namespace TrafficControl {
-class VehicularTrafficSignalHead : public IVehicularTrafficSignalHead  {
+class VehicularTrafficSignalHead : public IVehicularTrafficSignalHead {
 public:
   /**
    * @brief Configuration structure for initializing the vehicular traffic

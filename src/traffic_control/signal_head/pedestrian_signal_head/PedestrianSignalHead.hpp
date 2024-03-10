@@ -20,8 +20,8 @@ public:
   };
 
   PedestrianSignalHead(Config config);
-  void setState(State state);
-  void update(int deltaTimeMs);
+  void setState(State state) override;
+  void update(int deltaTimeMs) override;
 
 private:
   struct Aspects {

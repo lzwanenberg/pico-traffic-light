@@ -1,13 +1,12 @@
 #pragma once
 #include "../../../signal_head/pedestrian_signal_head/IPedestrianSignalHead.hpp"
 #include "../../phase_steps/PhaseSteps.hpp"
+#include "IPedestrianCyclePhase.hpp"
 #include <iostream>
 
 namespace TrafficControl {
-class PedestrianCyclePhase {
+class PedestrianCyclePhase : public IPedestrianCyclePhase {
 public:
-  using FinishedCallback = std::function<void()>;
-
   struct Config {
     IPedestrianSignalHead *pedestrianSignalHead;
     struct Timings {
@@ -18,9 +17,9 @@ public:
   };
 
   PedestrianCyclePhase(Config config);
-  void registerFinishedListener(FinishedCallback *callback);
-  void start();
-  void update(int deltaTimeMs);
+  void registerFinishedListener(FinishedCallback *callback) override;
+  void start() override;
+  void update(int deltaTimeMs) override;
 
 private:
   PhaseSteps steps;
