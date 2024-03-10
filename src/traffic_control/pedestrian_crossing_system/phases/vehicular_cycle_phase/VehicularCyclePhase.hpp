@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../signal_head/pedestrian_signal_head/PedestrianSignalHead.hpp"
+#include <iostream>
 #include "../../../signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
 #include "../../phase_steps/PhaseSteps.hpp"
 

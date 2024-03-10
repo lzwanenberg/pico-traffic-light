@@ -16,6 +16,7 @@ message("Building for target: ${TARGET}")
 if ("${TARGET}" STREQUAL "tests")
   Include(FetchContent)
 
+  # Catch2
   FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
@@ -23,6 +24,15 @@ if ("${TARGET}" STREQUAL "tests")
   )
 
   FetchContent_MakeAvailable(Catch2)
+
+  # FakeIt
+  FetchContent_Declare(
+    FakeIt
+    GIT_REPOSITORY https://github.com/eranpeer/FakeIt.git
+    GIT_TAG        2.4.0
+  )
+
+  FetchContent_MakeAvailable(FakeIt)
 endif ()
 
 set(MAIN_FILE "src/main.cpp")
@@ -55,7 +65,7 @@ if ("${TARGET}" STREQUAL "tests")
   set(CMAKE_CXX_STANDARD 17)
 
   add_executable(tests ${HEADER_FILES} ${SRC_FILES} ${TEST_FILES})
-  target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+  target_link_libraries(tests PRIVATE Catch2::Catch2WithMain FakeIt::FakeIt-catch)
 endif ()
 
 if ("${TARGET}" STREQUAL "release")
