@@ -1,5 +1,7 @@
 #include "../signal_head/pedestrian_signal_head/PedestrianSignalHead.hpp"
 #include "../signal_head/vehicular_traffic_signal_head/VehicularTrafficSignalHead.hpp"
+// #include "pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
+// #include "vehicular_cycle_phase/VehicularCyclePhase.hpp"
 
 namespace TrafficControl {
 class PedestrianCrossingSystem {
@@ -30,5 +32,9 @@ private:
      */
     PEDESTRIAN_CROSSING_ALLOWED
   };
+
+  Config config;
+  // PedestrianCyclePhase pedestrianPhase;
+  // VehicularCyclePhase vehicularPhase;
 };
 } // namespace TrafficControl

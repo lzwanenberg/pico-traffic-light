@@ -1,7 +1,7 @@
 #pragma once
-#include <iostream>
 #include "../../../signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
 #include "../../phase_steps/PhaseSteps.hpp"
+#include <iostream>
 
 namespace TrafficControl {
 class VehicularCyclePhase {
@@ -10,7 +10,7 @@ public:
 
   struct Config {
     FinishedCallback onFinished;
-    IVehicularTrafficSignalHead* vehicularSignalHead;
+    IVehicularTrafficSignalHead *vehicularSignalHead;
     struct Timings {
       int minimumRecallMs;
       int amberClearanceTimeMs;
@@ -24,5 +24,6 @@ public:
 
 private:
   PhaseSteps steps;
+  FinishedCallback finishedCallback;
 };
 } // namespace TrafficControl
