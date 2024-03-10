@@ -9,7 +9,6 @@ public:
   using FinishedCallback = std::function<void()>;
 
   struct Config {
-    FinishedCallback onFinished;
     IVehicularTrafficSignalHead *vehicularSignalHead;
     struct Timings {
       int minimumRecallMs;
@@ -19,11 +18,12 @@ public:
   };
 
   VehicularCyclePhase(Config config);
+  void registerFinishedListener(FinishedCallback *callback);
   void start();
   void update(int deltaTimeMs);
 
 private:
   PhaseSteps steps;
-  FinishedCallback finishedCallback;
+  FinishedCallback *finishedCallback;
 };
 } // namespace TrafficControl

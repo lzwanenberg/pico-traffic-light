@@ -24,6 +24,7 @@ public:
 
 struct TestContext {
   Config config;
+  FinishedCallback finishedCallback;
   std::shared_ptr<Mock<FinishedCallbackWrapper>> onFinishedMock;
   Mock<IVehicularTrafficSignalHead> vehicularSignalHeadMock;
 };
@@ -36,11 +37,12 @@ void initializeTestContext(TestContext &context,
   IVehicularTrafficSignalHead &vehicularSignalHead =
       context.vehicularSignalHeadMock.get();
 
-  context.config = {
-      .onFinished =
-          [&context] { (*context.onFinishedMock).get().operator()(); },
-      .vehicularSignalHead = &vehicularSignalHead,
-      .timings = timings};
+  context.finishedCallback = [&context] {
+    (*context.onFinishedMock).get().operator()();
+  };
+
+  context.config = {.vehicularSignalHead = &vehicularSignalHead,
+                    .timings = timings};
 
   When(Method(*context.onFinishedMock, operator())).AlwaysReturn();
   When(Method(context.vehicularSignalHeadMock, setState)).AlwaysReturn();
@@ -58,6 +60,7 @@ TEST_CASE("VehicularCyclePhase") {
       initializeTestContext(context);
       VehicularCyclePhase phase(context.config);
 
+      phase.registerFinishedListener(&context.finishedCallback);
       phase.start();
 
       Verify(Method(context.vehicularSignalHeadMock, setState)
@@ -77,6 +80,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
+        phase.registerFinishedListener(&context.finishedCallback);
         phase.start();
         phase.update(1000);
         phase.update(1999);
@@ -95,6 +99,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
+        phase.registerFinishedListener(&context.finishedCallback);
         phase.start();
         phase.update(1000);
         phase.update(1999);
@@ -115,6 +120,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
+        phase.registerFinishedListener(&context.finishedCallback);
         phase.start();
         phase.update(1000);
         phase.update(1999);
@@ -139,6 +145,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
+        phase.registerFinishedListener(&context.finishedCallback);
         phase.start();
         phase.update(1000);
         phase.update(1999);

@@ -26,8 +26,10 @@ VehicularCyclePhase::VehicularCyclePhase(Config config)
                                    config.vehicularSignalHead->setState(
                                        State::RED_CONTINUOUS);
                                  }},
-                        }}}) {
-  steps.registerFinishedListener(&config.onFinished);
+                        }}}) {}
+
+void VehicularCyclePhase::registerFinishedListener(FinishedCallback *callback) {
+  steps.registerFinishedListener(callback);
 }
 
 void VehicularCyclePhase::start() { steps.start(); }

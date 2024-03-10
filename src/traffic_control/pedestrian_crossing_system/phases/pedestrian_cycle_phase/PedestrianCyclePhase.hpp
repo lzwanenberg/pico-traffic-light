@@ -9,7 +9,6 @@ public:
   using FinishedCallback = std::function<void()>;
 
   struct Config {
-    FinishedCallback onFinished;
     IPedestrianSignalHead *pedestrianSignalHead;
     struct Timings {
       int minimumRecallMs;
@@ -19,6 +18,7 @@ public:
   };
 
   PedestrianCyclePhase(Config config);
+  void registerFinishedListener(FinishedCallback *callback);
   void start();
   void update(int deltaTimeMs);
 

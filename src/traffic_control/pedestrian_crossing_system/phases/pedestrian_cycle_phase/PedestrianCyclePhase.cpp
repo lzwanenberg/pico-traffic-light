@@ -27,8 +27,11 @@ PedestrianCyclePhase::PedestrianCyclePhase(Config config)
                       config.pedestrianSignalHead->setState(
                           State::RED_CONTINUOUS);
                     }},
-           }}}) {
-  steps.registerFinishedListener(&config.onFinished);
+           }}}) {}
+
+void PedestrianCyclePhase::registerFinishedListener(
+    FinishedCallback *callback) {
+  steps.registerFinishedListener(callback);
 }
 
 void PedestrianCyclePhase::start() { steps.start(); }
