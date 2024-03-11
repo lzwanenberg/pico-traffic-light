@@ -1,25 +1,24 @@
 #include "pico_w/gpio_writer.hpp"
 #include "pico_w/pico_w.hpp"
+#include "traffic_control/pedestrian_crossing_system/PedestrianCrossingSystem.hpp"
+#include "traffic_control/pedestrian_crossing_system/cycle_phases/pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
+#include "traffic_control/pedestrian_crossing_system/cycle_phases/vehicular_cycle_phase/VehicularCyclePhase.hpp"
+#include "traffic_control/signal_head/pedestrian_signal_head/PedestrianSignalHead.hpp"
 #include "traffic_control/signal_head/vehicular_traffic_signal_head/VehicularTrafficSignalHead.hpp"
 
-#define YELLOW_LED_PIN 1
-#define GREEN_LED_PIN 2
-
-#define RED_TIME 8000
-#define GREEN_TIME 6000
-#define YELLOW_TIME 2200
-
 using VehicularTrafficSignalHead = TrafficControl::VehicularTrafficSignalHead;
-using Config = VehicularTrafficSignalHead::Config;
-using State = VehicularTrafficSignalHead::State;
+using PedestrianSignalHead = TrafficControl::PedestrianSignalHead;
+using PedestrianCrossingSystem = TrafficControl::PedestrianCrossingSystem;
+using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
+using PedestrianCyclePhase = TrafficControl::PedestrianCyclePhase;
 
 int main() {
   PicoW::GPIOWriter gp0(PicoW::Pin::GP0);
   PicoW::GPIOWriter gp1(PicoW::Pin::GP1);
   PicoW::GPIOWriter gp2(PicoW::Pin::GP2);
 
-  VehicularTrafficSignalHead::Config config = {
-      .flashingIntervalMs = 1000,
+  VehicularTrafficSignalHead::Config vehicularConfig = {
+      .flashingIntervalMs = 500,
       .deviceControls = {
           .red =
               std::bind(&PicoW::GPIOWriter::write, &gp0, std::placeholders::_1),
@@ -29,14 +28,51 @@ int main() {
               std::bind(&PicoW::GPIOWriter::write, &gp2, std::placeholders::_1),
       }};
 
-  VehicularTrafficSignalHead signalHead(config);
+  VehicularTrafficSignalHead vehicularSignalHead(vehicularConfig);
 
-  signalHead.setState(State::AMBER_FLASHING);
+  PicoW::GPIOWriter gp3(PicoW::Pin::GP3);
+  PicoW::GPIOWriter gp4(PicoW::Pin::GP4);
+  PedestrianSignalHead::Config pedestrianConfig = {
+      .flashingIntervalMs = 500,
+      .deviceControls = {
+          .red =
+              std::bind(&PicoW::GPIOWriter::write, &gp3, std::placeholders::_1),
+          .green =
+              std::bind(&PicoW::GPIOWriter::write, &gp4, std::placeholders::_1),
+      }};
+  PedestrianSignalHead pedestrianSignalHead(pedestrianConfig);
 
+  vehicularSignalHead.setState(
+      VehicularTrafficSignalHead::State::AMBER_FLASHING);
+  pedestrianSignalHead.setState(PedestrianSignalHead::State::GREEN_FLASHING);
+
+  VehicularCyclePhase::Config vehicularCycleConfig = {
+      .vehicularSignalHead = &vehicularSignalHead,
+      .timings = {.minimumRecallMs = 8000,
+                  .amberClearanceTimeMs = 3000,
+                  .redClearanceTimeMs = 2000}};
+
+  VehicularCyclePhase vehicularCyclePhase(vehicularCycleConfig);
+
+  PedestrianCyclePhase::Config pedestrianCycleConfig = {
+      .pedestrianSignalHead = &pedestrianSignalHead,
+      .timings = {.minimumRecallMs = 8000,
+                  .greenFlashingClearanceTimeMs = 4000,
+                  .redClearanceTimeMs = 2000}};
+
+  PedestrianCyclePhase pedestrianCyclePhase(pedestrianCycleConfig);
+
+  PedestrianCrossingSystem::Config systemConfig = {
+      .vehicularPhase = &vehicularCyclePhase,
+      .pedestrianPhase = &pedestrianCyclePhase};
+
+  PedestrianCrossingSystem system(systemConfig);
+
+  system.start();
   while (true) {
-    signalHead.update(200);
+    system.update(100);
 
     // TODO, actually measure delta time and account for time taken to update
-    PicoW::sleep_ms(200);
+    PicoW::sleep_ms(100);
   }
 }

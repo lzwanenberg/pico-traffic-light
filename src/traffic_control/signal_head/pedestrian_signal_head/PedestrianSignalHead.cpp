@@ -8,7 +8,9 @@ PedestrianSignalHead::PedestrianSignalHead(Config config)
                           .deviceControlFunction = config.deviceControls.red}},
            .green = Aspect{
                {.flashingIntervalMs = config.flashingIntervalMs,
-                .deviceControlFunction = config.deviceControls.green}}}) {}
+                .deviceControlFunction = config.deviceControls.green}}}) {
+  setState(State::RED_CONTINUOUS);
+}
 
 void PedestrianSignalHead::setState(State state) {
   switch (state) {

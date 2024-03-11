@@ -11,7 +11,9 @@ VehicularTrafficSignalHead::VehicularTrafficSignalHead(Config config)
                        .deviceControlFunction = config.deviceControls.amber}},
            .green = Aspect{
                {.flashingIntervalMs = config.flashingIntervalMs,
-                .deviceControlFunction = config.deviceControls.green}}}) {}
+                .deviceControlFunction = config.deviceControls.green}}}) {
+  setState(State::RED_CONTINUOUS);
+}
 
 void VehicularTrafficSignalHead::setState(State state) {
   switch (state) {

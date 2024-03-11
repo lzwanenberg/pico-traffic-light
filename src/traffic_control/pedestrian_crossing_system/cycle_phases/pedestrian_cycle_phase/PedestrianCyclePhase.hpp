@@ -22,6 +22,7 @@ public:
   void update(int deltaTimeMs) override;
 
 private:
+  IPedestrianSignalHead *signalHead;
   PhaseSteps steps;
 };
 } // namespace TrafficControl

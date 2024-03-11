@@ -22,6 +22,7 @@ public:
   void update(int deltaTimeMs) override;
 
 private:
+  IVehicularTrafficSignalHead *signalHead;
   PhaseSteps steps;
   FinishedCallback *finishedCallback;
 };

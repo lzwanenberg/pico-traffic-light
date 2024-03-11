@@ -27,6 +27,7 @@ private:
   FinishedCallback *finishedCallback;
   int currentStepIndex;
   int elapsedTime;
+  bool running;
 
   void triggerFinishedCallback();
 };
