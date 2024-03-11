@@ -48,11 +48,6 @@ void initializeTestContext(TestContext &context,
   When(Method(context.pedestrianSignalHeadMock, setState)).AlwaysReturn();
 }
 
-void resetMocks(TestContext &context) {
-  Fake(Method(context.pedestrianSignalHeadMock, setState));
-  Fake(Method(*context.onFinishedMock, operator()));
-}
-
 TEST_CASE("PedestrianCyclePhase") {
   SECTION(".start") {
     SECTION("it set states GREEN_CONTINUOUS") {

@@ -3,7 +3,6 @@
 
 namespace TrafficControl {
 
-using State = IVehicularTrafficSignalHead::State;
 using Config = PedestrianCrossingSystem::Config;
 
 PedestrianCrossingSystem::PedestrianCrossingSystem(Config config)
