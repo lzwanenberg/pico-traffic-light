@@ -51,7 +51,7 @@ void initializeTestContext(TestContext &context,
 
 TEST_CASE("VehicularCyclePhase") {
   SECTION(".start") {
-    SECTION("it set states GREEN_CONTINUOUS") {
+    SECTION("it set state GREEN_CONTINUOUS") {
       TestContext context;
       initializeTestContext(context);
       VehicularCyclePhase phase(context.config);
@@ -154,6 +154,51 @@ TEST_CASE("VehicularCyclePhase") {
         Verify(Method(context.vehicularSignalHeadMock, setState)).Exactly(3);
         Verify(Method(*context.onFinishedMock, operator())).Exactly(1);
       }
+    }
+
+    SECTION("it updates signal head") {
+      TestContext context;
+      initializeTestContext(context);
+      VehicularCyclePhase phase(context.config);
+
+      phase.registerFinishedListener(&context.finishedCallback);
+      phase.start();
+      phase.update(100);
+      phase.update(300);
+      phase.update(200);
+
+      Verify(Method(context.vehicularSignalHeadMock, update)).Exactly(3);
+      Verify(Method(context.vehicularSignalHeadMock, update).Using(100),
+             Method(context.vehicularSignalHeadMock, update).Using(300),
+             Method(context.vehicularSignalHeadMock, update).Using(200));
+    }
+  }
+
+  SECTION(".reset") {
+    SECTION("it stops executing steps and sets state to RED_CONTINOUS") {
+      Timings timings = {.minimumRecallMs = 3000,
+                         .amberClearanceTimeMs = 2000,
+                         .redClearanceTimeMs = 1000};
+      TestContext context;
+      initializeTestContext(context, timings);
+      VehicularCyclePhase phase(context.config);
+
+      phase.registerFinishedListener(&context.finishedCallback);
+      phase.start();
+      phase.update(1000);
+      phase.update(1999);
+      phase.reset();
+      phase.update(1);
+      phase.update(1999);
+      phase.update(1);
+
+      Verify(Method(context.vehicularSignalHeadMock, setState)).Exactly(2);
+      Verify(Method(context.vehicularSignalHeadMock, setState)
+                 .Using(State::GREEN_CONTINUOUS),
+             Method(context.vehicularSignalHeadMock, setState)
+                 .Using(State::RED_CONTINUOUS));
+
+      Verify(Method(*context.onFinishedMock, operator())).Exactly(0);
     }
   }
 }

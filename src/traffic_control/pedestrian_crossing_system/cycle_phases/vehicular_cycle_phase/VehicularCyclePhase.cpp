@@ -35,16 +35,16 @@ void VehicularCyclePhase::registerFinishedListener(FinishedCallback *callback) {
   steps.registerFinishedListener(callback);
 }
 
-void VehicularCyclePhase::init() {
+void VehicularCyclePhase::start() { steps.start(); }
+
+void VehicularCyclePhase::reset() {
   steps.stop();
   signalHead->setState(State::RED_CONTINUOUS);
 }
 
-void VehicularCyclePhase::start() { steps.start(); }
-
 void VehicularCyclePhase::update(int deltaTimeMs) {
   steps.update(deltaTimeMs);
-  signalHead->update(deltaTimeMs); // TODO: add unit test
+  signalHead->update(deltaTimeMs);
 }
 
 } // namespace TrafficControl
