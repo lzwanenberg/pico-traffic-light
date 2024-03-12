@@ -1,5 +1,4 @@
 #include "PhaseSteps.hpp"
-#include <iostream>
 
 namespace TrafficControl {
 
@@ -12,9 +11,8 @@ void PhaseSteps::registerFinishedListener(FinishedCallback *callback) {
 }
 
 void PhaseSteps::start() {
+  stop();
   running = true;
-  currentStepIndex = 0;
-  elapsedTime = 0;
 
   if (currentStepIndex >= steps.size())
     triggerFinishedCallback();
@@ -39,6 +37,12 @@ void PhaseSteps::update(int deltaTimeMs) {
     triggerFinishedCallback();
   } else
     steps[currentStepIndex].executionFunction();
+}
+
+void PhaseSteps::stop() {
+  running = false;
+  currentStepIndex = 0;
+  elapsedTime = 0;
 }
 
 void PhaseSteps::triggerFinishedCallback() {

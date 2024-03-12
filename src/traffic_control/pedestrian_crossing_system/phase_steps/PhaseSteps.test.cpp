@@ -146,5 +146,31 @@ TEST_CASE("PhaseSteps") {
       }
     }
   }
+
+  SECTION(".stop") {
+    SECTION("it stops executing steps") {
+      FunctionMock onFinished;
+
+      FunctionMock step1Fn;
+      FunctionMock step2Fn;
+
+      PhaseStep step1 = createStep(step1Fn, 500);
+      PhaseStep step2 = createStep(step2Fn, 1000);
+
+      PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+      FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+      steps.registerFinishedListener(&callback);
+      steps.start();
+      steps.update(200);
+      steps.stop();
+      steps.update(500);
+      steps.update(500);
+
+      REQUIRE(step1Fn.calls == 1);
+      REQUIRE(step2Fn.calls == 0);
+      REQUIRE(onFinished.calls == 0);
+    }
+  }
 }
 } // namespace

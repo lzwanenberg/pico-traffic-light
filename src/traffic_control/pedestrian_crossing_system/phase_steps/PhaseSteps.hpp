@@ -20,6 +20,7 @@ public:
 
   void registerFinishedListener(FinishedCallback *callback);
   void start();
+  void stop();
   void update(int deltaTimeMs);
 
 private:
