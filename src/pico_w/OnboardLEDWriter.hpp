@@ -1,7 +1,8 @@
+#include "IWriter.hpp"
 namespace PicoW {
 
-class OnboardLEDWriter {
+class OnboardLEDWriter : public IWriter {
 public:
-  void write(bool value);
+  void write(bool value) override;
 };
 } // namespace PicoW
