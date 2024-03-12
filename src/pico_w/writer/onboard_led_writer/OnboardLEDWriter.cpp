@@ -1,5 +1,4 @@
 #include "OnboardLEDWriter.hpp"
-#include "PicoW.hpp"
 #include "hardware/gpio.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"

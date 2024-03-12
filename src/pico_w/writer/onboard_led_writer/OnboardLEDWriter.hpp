@@ -1,4 +1,6 @@
-#include "IWriter.hpp"
+#pragma once
+#include "../IWriter.hpp"
+
 namespace PicoW {
 
 class OnboardLEDWriter : public IWriter {

@@ -1,4 +1,5 @@
-#include "IWriter.hpp"
+#pragma once
+#include "../IWriter.hpp"
 
 namespace PicoW {
 enum class Pin {

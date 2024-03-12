@@ -1,7 +1,7 @@
-#include "pico_w/GPIOWriter.hpp"
-#include "pico_w/IWriter.hpp"
-#include "pico_w/OnboardLEDWriter.hpp"
 #include "pico_w/PicoW.hpp"
+#include "pico_w/writer/IWriter.hpp"
+#include "pico_w/writer/gpio_writer/GPIOWriter.hpp"
+#include "pico_w/writer/onboard_led_writer/OnboardLEDWriter.hpp"
 #include "traffic_control/pedestrian_crossing_system/PedestrianCrossingSystem.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/vehicular_cycle_phase/VehicularCyclePhase.hpp"
@@ -29,7 +29,7 @@ int main() {
                            std::placeholders::_1),
           .amber = std::bind(&PicoW::IWriter::write, &vehicularAmber,
                              std::placeholders::_1),
-          .green = std::bind(&PicoW::IWriter::write, &onboardLED,
+          .green = std::bind(&PicoW::IWriter::write, &vehicularGreen,
                              std::placeholders::_1),
       }};
 
