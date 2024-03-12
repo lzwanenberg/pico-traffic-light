@@ -14,6 +14,10 @@ using PedestrianCrossingSystem = TrafficControl::PedestrianCrossingSystem;
 using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
 using PedestrianCyclePhase = TrafficControl::PedestrianCyclePhase;
 
+std::function<void(bool)> bind(PicoW::IWriter *writer) {
+  return std::bind(&PicoW::IWriter::write, writer, std::placeholders::_1);
+}
+
 int main() {
   PicoW::initialize();
   PicoW::OnboardLEDWriter onboardLED;
@@ -24,14 +28,9 @@ int main() {
 
   VehicularTrafficSignalHead::Config vehicularConfig = {
       .flashingIntervalMs = 500,
-      .deviceControls = {
-          .red = std::bind(&PicoW::IWriter::write, &vehicularRed,
-                           std::placeholders::_1),
-          .amber = std::bind(&PicoW::IWriter::write, &vehicularAmber,
-                             std::placeholders::_1),
-          .green = std::bind(&PicoW::IWriter::write, &vehicularGreen,
-                             std::placeholders::_1),
-      }};
+      .deviceControls = {.red = bind(&vehicularRed),
+                         .amber = bind(&vehicularAmber),
+                         .green = bind(&vehicularGreen)}};
 
   VehicularTrafficSignalHead vehicularSignalHead(vehicularConfig);
 
@@ -40,11 +39,10 @@ int main() {
   PedestrianSignalHead::Config pedestrianConfig = {
       .flashingIntervalMs = 500,
       .deviceControls = {
-          .red = std::bind(&PicoW::IWriter::write, &pedestrianRed,
-                           std::placeholders::_1),
-          .green = std::bind(&PicoW::IWriter::write, &pedestrianGreen,
-                             std::placeholders::_1),
+          .red = bind(&pedestrianRed),
+          .green = bind(&pedestrianGreen),
       }};
+
   PedestrianSignalHead pedestrianSignalHead(pedestrianConfig);
 
   VehicularCyclePhase::Config vehicularCycleConfig = {
