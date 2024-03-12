@@ -12,6 +12,7 @@ class IVehicularCyclePhase {
 public:
   using FinishedCallback = std::function<void()>;
   virtual void registerFinishedListener(FinishedCallback *callback) = 0;
+  virtual void init() = 0;
   virtual void start() = 0;
   virtual void update(int deltaTimeMs) = 0;
 };

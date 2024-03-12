@@ -46,6 +46,7 @@ void initializeTestContext(TestContext &context,
 
   When(Method(*context.onFinishedMock, operator())).AlwaysReturn();
   When(Method(context.vehicularSignalHeadMock, setState)).AlwaysReturn();
+  When(Method(context.vehicularSignalHeadMock, update)).AlwaysReturn();
 }
 
 TEST_CASE("VehicularCyclePhase") {
