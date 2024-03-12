@@ -1,4 +1,4 @@
-#include "pico_w/gpio_writer.hpp"
+#include "pico_w/GPIOWriter.hpp"
 #include "pico_w/pico_w.hpp"
 #include "traffic_control/pedestrian_crossing_system/PedestrianCrossingSystem.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
