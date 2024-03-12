@@ -37,6 +37,7 @@ void initializePedestrianCyclePhaseMock(TestContext &context) {
         context.pedestrianCyclePhase.finish = callback;
       });
   When(Method(context.pedestrianCyclePhase.mock, start)).AlwaysReturn();
+  When(Method(context.pedestrianCyclePhase.mock, reset)).AlwaysReturn();
   When(Method(context.pedestrianCyclePhase.mock, update)).AlwaysReturn();
 }
 
@@ -48,6 +49,7 @@ void initializeVehicularCyclePhaseMock(TestContext &context) {
         context.vehicularCyclePhase.finish = callback;
       });
   When(Method(context.vehicularCyclePhase.mock, start)).AlwaysReturn();
+  When(Method(context.vehicularCyclePhase.mock, reset)).AlwaysReturn();
   When(Method(context.vehicularCyclePhase.mock, update)).AlwaysReturn();
 }
 
@@ -60,6 +62,18 @@ void initializeTestContext(TestContext &context) {
 
 TEST_CASE("PedestrianCrossingSystem") {
   SECTION(".start") {
+
+    SECTION("resets phases") {
+      TestContext context;
+      initializeTestContext(context);
+      PedestrianCrossingSystem system(context.config);
+
+      system.start();
+
+      Verify(Method(context.vehicularCyclePhase.mock, reset)).Exactly(1);
+      Verify(Method(context.pedestrianCyclePhase.mock, reset)).Exactly(1);
+    }
+
     SECTION("starts vehicular phase") {
       TestContext context;
       initializeTestContext(context);

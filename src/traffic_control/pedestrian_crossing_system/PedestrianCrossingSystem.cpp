@@ -16,7 +16,11 @@ PedestrianCrossingSystem::PedestrianCrossingSystem(Config config)
       &PedestrianCrossingSystem::handlePedestrianPhaseFinished, this)));
 }
 
-void PedestrianCrossingSystem::start() { vehicularPhase->start(); }
+void PedestrianCrossingSystem::start() {
+  vehicularPhase->reset();
+  pedestrianPhase->reset();
+  vehicularPhase->start();
+}
 
 void PedestrianCrossingSystem::update(int deltaTimeMs) {
   vehicularPhase->update(deltaTimeMs);
