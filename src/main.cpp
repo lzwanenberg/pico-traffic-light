@@ -1,3 +1,4 @@
+#include "System.hpp"
 #include "pico_w/PicoW.hpp"
 #include "pico_w/writer/IWriter.hpp"
 #include "pico_w/writer/gpio_writer/GPIOWriter.hpp"
@@ -13,6 +14,7 @@ using PedestrianSignalHead = TrafficControl::PedestrianSignalHead;
 using PedestrianCrossingSystem = TrafficControl::PedestrianCrossingSystem;
 using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
 using PedestrianCyclePhase = TrafficControl::PedestrianCyclePhase;
+using Pin = PicoW::Pin;
 
 std::function<void(bool)> bind(PicoW::IWriter *writer) {
   return std::bind(&PicoW::IWriter::write, writer, std::placeholders::_1);
@@ -20,62 +22,35 @@ std::function<void(bool)> bind(PicoW::IWriter *writer) {
 
 int main() {
   PicoW::initialize();
-  PicoW::OnboardLEDWriter onboardLED;
 
-  PicoW::GPIOWriter vehicularRed(PicoW::Pin::GP6);
-  PicoW::GPIOWriter vehicularAmber(PicoW::Pin::GP7);
-  PicoW::GPIOWriter vehicularGreen(PicoW::Pin::GP8);
+  PicoW::GPIOWriter vehicularRed(Pin::GP6);
+  PicoW::GPIOWriter vehicularAmber(Pin::GP7);
+  PicoW::GPIOWriter vehicularGreen(Pin::GP8);
+  PicoW::GPIOWriter pedestrianRed(Pin::GP27);
+  PicoW::GPIOWriter pedestrianGreen(Pin::GP26);
 
-  VehicularTrafficSignalHead::Config vehicularConfig = {
-      .flashingIntervalMs = 500,
-      .deviceControls = {.red = bind(&vehicularRed),
-                         .amber = bind(&vehicularAmber),
-                         .green = bind(&vehicularGreen)}};
+  System::Config config;
 
-  VehicularTrafficSignalHead vehicularSignalHead(vehicularConfig);
+  config.signalHeadControls.vehicular.red = bind(&vehicularRed);
+  config.signalHeadControls.vehicular.amber = bind(&vehicularAmber);
+  config.signalHeadControls.vehicular.green = bind(&vehicularGreen);
+  config.signalHeadControls.pedestrian.red = bind(&pedestrianRed);
+  config.signalHeadControls.pedestrian.green = bind(&pedestrianGreen);
 
-  PicoW::GPIOWriter pedestrianRed(PicoW::Pin::GP27);
-  PicoW::GPIOWriter pedestrianGreen(PicoW::Pin::GP26);
-  PedestrianSignalHead::Config pedestrianConfig = {
-      .flashingIntervalMs = 500,
-      .deviceControls = {
-          .red = bind(&pedestrianRed),
-          .green = bind(&pedestrianGreen),
-      }};
+  config.aspect.flashingIntervalMs = 500;
 
-  PedestrianSignalHead pedestrianSignalHead(pedestrianConfig);
+  config.cyclePhases.pedestrian.minimumRecallMs = 8000;
+  config.cyclePhases.pedestrian.greenFlashingClearanceTimeMs = 4000;
+  config.cyclePhases.pedestrian.redClearanceTimeMs = 3000;
+  config.cyclePhases.vehicular.minimumRecallMs = 8000;
+  config.cyclePhases.vehicular.amberClearanceTimeMs = 3000;
+  config.cyclePhases.vehicular.redClearanceTimeMs = 2000;
 
-  VehicularCyclePhase::Config vehicularCycleConfig = {
-      .vehicularSignalHead = &vehicularSignalHead,
-      .timings = {.minimumRecallMs = 8000,
-                  .amberClearanceTimeMs = 3000,
-                  .redClearanceTimeMs = 2000}};
-
-  VehicularCyclePhase vehicularCyclePhase(vehicularCycleConfig);
-
-  PedestrianCyclePhase::Config pedestrianCycleConfig = {
-      .pedestrianSignalHead = &pedestrianSignalHead,
-      .timings = {.minimumRecallMs = 8000,
-                  .greenFlashingClearanceTimeMs = 4000,
-                  .redClearanceTimeMs = 2000}};
-
-  PedestrianCyclePhase pedestrianCyclePhase(pedestrianCycleConfig);
-
-  PedestrianCrossingSystem::Config systemConfig = {
-      .vehicularPhase = &vehicularCyclePhase,
-      .pedestrianPhase = &pedestrianCyclePhase};
-
-  PedestrianCrossingSystem system(systemConfig);
-
-  // bool onboardLEDValue = true;
-  // onboardLED.write(onboardLEDValue);
+  System system(config);
 
   system.start();
   while (true) {
     system.update(100);
-
-    // onboardLEDValue = !onboardLEDValue;
-    // onboardLED.write(onboardLEDValue);
 
     // TODO, actually measure delta time and account for time taken to update
     PicoW::sleep_ms(100);
