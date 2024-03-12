@@ -1,6 +1,6 @@
 #include "pico_w/GPIOWriter.hpp"
 #include "pico_w/OnboardLEDWriter.hpp"
-#include "pico_w/pico_w.hpp"
+#include "pico_w/PicoW.hpp"
 #include "traffic_control/pedestrian_crossing_system/PedestrianCrossingSystem.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/vehicular_cycle_phase/VehicularCyclePhase.hpp"
