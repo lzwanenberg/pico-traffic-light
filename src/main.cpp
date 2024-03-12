@@ -30,8 +30,8 @@ int main() {
 
   VehicularTrafficSignalHead vehicularSignalHead(vehicularConfig);
 
-  PicoW::GPIOWriter gp3(PicoW::Pin::GP3);
-  PicoW::GPIOWriter gp4(PicoW::Pin::GP4);
+  PicoW::GPIOWriter gp3(PicoW::Pin::GP27);
+  PicoW::GPIOWriter gp4(PicoW::Pin::GP26);
   PedestrianSignalHead::Config pedestrianConfig = {
       .flashingIntervalMs = 500,
       .deviceControls = {
