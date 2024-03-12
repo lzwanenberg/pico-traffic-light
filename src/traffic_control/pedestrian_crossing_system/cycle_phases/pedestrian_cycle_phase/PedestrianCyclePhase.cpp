@@ -45,7 +45,7 @@ void PedestrianCyclePhase::reset() {
 
 void PedestrianCyclePhase::update(int deltaTimeMs) {
   steps.update(deltaTimeMs);
-  signalHead->update(deltaTimeMs); // TODO: add unit test
+  signalHead->update(deltaTimeMs);
 }
 
 } // namespace TrafficControl

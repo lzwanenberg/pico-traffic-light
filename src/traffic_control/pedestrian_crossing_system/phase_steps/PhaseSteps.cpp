@@ -21,7 +21,7 @@ void PhaseSteps::start() {
 }
 
 void PhaseSteps::update(int deltaTimeMs) {
-  if (!running) // TODO: test this case
+  if (!running)
     return;
 
   elapsedTime += deltaTimeMs;
