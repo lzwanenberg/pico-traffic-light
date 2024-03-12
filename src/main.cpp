@@ -1,4 +1,5 @@
 #include "pico_w/GPIOWriter.hpp"
+#include "pico_w/OnboardLEDWriter.hpp"
 #include "pico_w/pico_w.hpp"
 #include "traffic_control/pedestrian_crossing_system/PedestrianCrossingSystem.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
@@ -13,32 +14,32 @@ using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
 using PedestrianCyclePhase = TrafficControl::PedestrianCyclePhase;
 
 int main() {
-  PicoW::GPIOWriter gp0(PicoW::Pin::GP0);
-  PicoW::GPIOWriter gp1(PicoW::Pin::GP1);
-  PicoW::GPIOWriter gp2(PicoW::Pin::GP2);
+  PicoW::GPIOWriter vehicularRed(PicoW::Pin::GP6);
+  PicoW::GPIOWriter vehicularAmber(PicoW::Pin::GP7);
+  PicoW::GPIOWriter vehicularGreen(PicoW::Pin::GP8);
 
   VehicularTrafficSignalHead::Config vehicularConfig = {
       .flashingIntervalMs = 500,
       .deviceControls = {
-          .red =
-              std::bind(&PicoW::GPIOWriter::write, &gp0, std::placeholders::_1),
-          .amber =
-              std::bind(&PicoW::GPIOWriter::write, &gp1, std::placeholders::_1),
-          .green =
-              std::bind(&PicoW::GPIOWriter::write, &gp2, std::placeholders::_1),
+          .red = std::bind(&PicoW::GPIOWriter::write, &vehicularRed,
+                           std::placeholders::_1),
+          .amber = std::bind(&PicoW::GPIOWriter::write, &vehicularAmber,
+                             std::placeholders::_1),
+          .green = std::bind(&PicoW::GPIOWriter::write, &vehicularGreen,
+                             std::placeholders::_1),
       }};
 
   VehicularTrafficSignalHead vehicularSignalHead(vehicularConfig);
 
-  PicoW::GPIOWriter gp3(PicoW::Pin::GP27);
-  PicoW::GPIOWriter gp4(PicoW::Pin::GP26);
+  PicoW::GPIOWriter pedestrianRed(PicoW::Pin::GP27);
+  PicoW::GPIOWriter pedestrianGreen(PicoW::Pin::GP26);
   PedestrianSignalHead::Config pedestrianConfig = {
       .flashingIntervalMs = 500,
       .deviceControls = {
-          .red =
-              std::bind(&PicoW::GPIOWriter::write, &gp3, std::placeholders::_1),
-          .green =
-              std::bind(&PicoW::GPIOWriter::write, &gp4, std::placeholders::_1),
+          .red = std::bind(&PicoW::GPIOWriter::write, &pedestrianRed,
+                           std::placeholders::_1),
+          .green = std::bind(&PicoW::GPIOWriter::write, &pedestrianGreen,
+                             std::placeholders::_1),
       }};
   PedestrianSignalHead pedestrianSignalHead(pedestrianConfig);
 
@@ -68,9 +69,17 @@ int main() {
 
   PedestrianCrossingSystem system(systemConfig);
 
+  PicoW::initialize();
+  PicoW::OnboardLEDWriter onboardLED;
+  bool onboardLEDValue = true;
+  onboardLED.write(onboardLEDValue);
+
   system.start();
   while (true) {
     system.update(100);
+
+    onboardLEDValue = !onboardLEDValue;
+    onboardLED.write(onboardLEDValue);
 
     // TODO, actually measure delta time and account for time taken to update
     PicoW::sleep_ms(100);
