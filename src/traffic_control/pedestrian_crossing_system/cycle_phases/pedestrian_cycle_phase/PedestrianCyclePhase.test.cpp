@@ -46,6 +46,7 @@ void initializeTestContext(TestContext &context,
 
   When(Method(*context.onFinishedMock, operator())).AlwaysReturn();
   When(Method(context.pedestrianSignalHeadMock, setState)).AlwaysReturn();
+  When(Method(context.pedestrianSignalHeadMock, update)).AlwaysReturn();
 }
 
 TEST_CASE("PedestrianCyclePhase") {
@@ -153,6 +154,51 @@ TEST_CASE("PedestrianCyclePhase") {
         Verify(Method(context.pedestrianSignalHeadMock, setState)).Exactly(3);
         Verify(Method(*context.onFinishedMock, operator())).Exactly(1);
       }
+    }
+
+    SECTION("it updates signal head") {
+      TestContext context;
+      initializeTestContext(context);
+      PedestrianCyclePhase phase(context.config);
+
+      phase.registerFinishedListener(&context.finishedCallback);
+      phase.start();
+      phase.update(100);
+      phase.update(300);
+      phase.update(200);
+
+      Verify(Method(context.pedestrianSignalHeadMock, update)).Exactly(3);
+      Verify(Method(context.pedestrianSignalHeadMock, update).Using(100),
+             Method(context.pedestrianSignalHeadMock, update).Using(300),
+             Method(context.pedestrianSignalHeadMock, update).Using(200));
+    }
+  }
+
+  SECTION(".reset") {
+    SECTION("it stops executing steps and sets state to RED_CONTINOUS") {
+      Timings timings = {.minimumRecallMs = 3000,
+                         .greenFlashingClearanceTimeMs = 2000,
+                         .redClearanceTimeMs = 1000};
+      TestContext context;
+      initializeTestContext(context, timings);
+      PedestrianCyclePhase phase(context.config);
+
+      phase.registerFinishedListener(&context.finishedCallback);
+      phase.start();
+      phase.update(1000);
+      phase.update(1999);
+      phase.reset();
+      phase.update(1);
+      phase.update(1999);
+      phase.update(1);
+
+      Verify(Method(context.pedestrianSignalHeadMock, setState)).Exactly(2);
+      Verify(Method(context.pedestrianSignalHeadMock, setState)
+                 .Using(State::GREEN_CONTINUOUS),
+             Method(context.pedestrianSignalHeadMock, setState)
+                 .Using(State::RED_CONTINUOUS));
+
+      Verify(Method(*context.onFinishedMock, operator())).Exactly(0);
     }
   }
 }

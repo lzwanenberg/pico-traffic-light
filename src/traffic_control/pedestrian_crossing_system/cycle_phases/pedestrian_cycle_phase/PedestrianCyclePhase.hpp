@@ -19,6 +19,7 @@ public:
   PedestrianCyclePhase(Config config);
   void registerFinishedListener(FinishedCallback *callback) override;
   void start() override;
+  void reset() override;
   void update(int deltaTimeMs) override;
 
 private:

@@ -29,9 +29,7 @@ PedestrianCyclePhase::PedestrianCyclePhase(Config config)
                               State::RED_CONTINUOUS);
                         }},
                }}}),
-      signalHead(config.pedestrianSignalHead) {
-  signalHead->setState(State::RED_CONTINUOUS);
-}
+      signalHead(config.pedestrianSignalHead) {}
 
 void PedestrianCyclePhase::registerFinishedListener(
     FinishedCallback *callback) {
@@ -39,6 +37,11 @@ void PedestrianCyclePhase::registerFinishedListener(
 }
 
 void PedestrianCyclePhase::start() { steps.start(); }
+
+void PedestrianCyclePhase::reset() {
+  steps.stop();
+  signalHead->setState(State::RED_CONTINUOUS);
+}
 
 void PedestrianCyclePhase::update(int deltaTimeMs) {
   steps.update(deltaTimeMs);
