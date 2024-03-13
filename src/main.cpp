@@ -1,5 +1,6 @@
 #include "System.hpp"
 #include "pico_w/PicoW.hpp"
+#include "pico_w/reader/bootsel_button_reader/BootselButtonReader.hpp"
 #include "pico_w/writer/IWriter.hpp"
 #include "pico_w/writer/gpio_writer/GPIOWriter.hpp"
 #include "pico_w/writer/onboard_led_writer/OnboardLEDWriter.hpp"
@@ -22,6 +23,8 @@ std::function<void(bool)> bind(PicoW::IWriter *writer) {
 
 int main() {
   PicoW::initialize();
+  PicoW::BootselButtonReader button;
+  PicoW::OnboardLEDWriter onboardLED;
 
   PicoW::GPIOWriter vehicularRed(Pin::GP6);
   PicoW::GPIOWriter vehicularAmber(Pin::GP7);
@@ -50,9 +53,15 @@ int main() {
 
   system.start();
   while (true) {
-    system.update(100);
+    system.update(10);
+
+    if (button.read()) {
+      onboardLED.write(1);
+    } else {
+      onboardLED.write(0);
+    }
 
     // TODO, actually measure delta time and account for time taken to update
-    PicoW::sleep_ms(100);
+    PicoW::sleep_ms(10);
   }
 }
