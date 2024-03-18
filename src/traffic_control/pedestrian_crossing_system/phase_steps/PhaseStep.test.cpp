@@ -133,5 +133,75 @@ TEST_CASE("PhaseStep") {
       }
     }
   }
+
+  SECTION(".isRunning") {
+    SECTION("when start has not been called") {
+      SECTION("it returns false") {
+        int initialDurationMs = 1000;
+
+        FunctionMock execute;
+        FunctionMock onFinished;
+        PhaseStep step(
+            {{.initialDurationMs = initialDurationMs,
+              .executionFunction = [&execute]() { execute.call(); }}});
+
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        step.registerFinishedListener(&callback);
+
+        REQUIRE_FALSE(step.isRunning());
+      }
+    }
+
+    SECTION("while step is being executed") {
+      SECTION("it returns true") {
+        int initialDurationMs = 1000;
+
+        FunctionMock execute;
+        FunctionMock onFinished;
+        PhaseStep step(
+            {{.initialDurationMs = initialDurationMs,
+              .executionFunction = [&execute]() { execute.call(); }}});
+
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        step.registerFinishedListener(&callback);
+        step.start();
+        REQUIRE(step.isRunning());
+        step.update(400);
+        step.update(400);
+        step.extend(500);
+        REQUIRE(step.isRunning());
+        step.update(400);
+        step.update(50);
+        REQUIRE(step.isRunning());
+      }
+    }
+
+    SECTION("when enough time has passed") {
+      SECTION("it returns false") {
+        int initialDurationMs = 1000;
+
+        FunctionMock execute;
+        FunctionMock onFinished;
+        PhaseStep step(
+            {{.initialDurationMs = initialDurationMs,
+              .executionFunction = [&execute]() { execute.call(); }}});
+
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        step.registerFinishedListener(&callback);
+        step.start();
+        step.update(400);
+        step.update(400);
+        step.extend(500);
+        step.update(400);
+        step.update(50);
+        step.update(50);
+
+        REQUIRE_FALSE(step.isRunning());
+      }
+    }
+  }
 }
 } // namespace

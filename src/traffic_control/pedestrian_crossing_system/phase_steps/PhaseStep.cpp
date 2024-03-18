@@ -39,6 +39,8 @@ void PhaseStep::stop() {
   remainingTimeMs = initialDurationMs;
 }
 
+bool PhaseStep::isRunning() { return running; }
+
 void PhaseStep::triggerFinishedCallback() {
   if (finishedCallback == nullptr)
     return;

@@ -19,6 +19,7 @@ public:
   void extend(int timeMs);
   void stop();
   void update(int deltaTimeMs);
+  bool isRunning();
 
 private:
   int initialDurationMs;
