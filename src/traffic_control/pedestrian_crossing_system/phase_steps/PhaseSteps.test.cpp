@@ -3,11 +3,12 @@
 #include <iostream>
 #include <vector>
 
+#include "PhaseStep.hpp"
 #include "PhaseSteps.hpp"
 
 namespace {
 using PhaseSteps = TrafficControl::PhaseSteps;
-using PhaseStep = PhaseSteps::PhaseStep;
+using PhaseStep = TrafficControl::PhaseStep;
 using Config = PhaseSteps::Config;
 using FinishedCallback = PhaseSteps::FinishedCallback;
 
@@ -18,10 +19,10 @@ public:
 };
 
 PhaseStep createStep(FunctionMock &executionFunction, int durationMs = 1000) {
-  return {.durationMs = durationMs,
-          .executionFunction = [&executionFunction]() {
-            executionFunction.call();
-          }};
+  return PhaseStep{{.initialDurationMs = durationMs,
+                    .executionFunction = [&executionFunction]() {
+                      executionFunction.call();
+                    }}};
 }
 
 TEST_CASE("PhaseSteps") {
@@ -33,8 +34,7 @@ TEST_CASE("PhaseSteps") {
         PhaseSteps steps({.steps = std::vector<PhaseStep>{}});
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        steps.registerFinishedListener(&callback);
-        steps.start();
+        steps.start(&callback);
 
         REQUIRE(onFinished.calls == 1);
       }
@@ -53,9 +53,7 @@ TEST_CASE("PhaseSteps") {
         PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        steps.registerFinishedListener(&callback);
-        steps.registerFinishedListener(&callback);
-        steps.start();
+        steps.start(&callback);
 
         REQUIRE(step1Fn.calls == 1);
         REQUIRE(step2Fn.calls == 0);
@@ -78,8 +76,7 @@ TEST_CASE("PhaseSteps") {
         PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        steps.registerFinishedListener(&callback);
-        steps.start();
+        steps.start(&callback);
         steps.update(200);
         steps.update(299);
 
@@ -102,8 +99,7 @@ TEST_CASE("PhaseSteps") {
         PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        steps.registerFinishedListener(&callback);
-        steps.start();
+        steps.start(&callback);
         steps.update(200);
         steps.update(299);
         steps.update(1);
@@ -127,8 +123,7 @@ TEST_CASE("PhaseSteps") {
         PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        steps.registerFinishedListener(&callback);
-        steps.start();
+        steps.start(&callback);
         steps.update(200);
         steps.update(299);
         steps.update(1);
@@ -155,8 +150,7 @@ TEST_CASE("PhaseSteps") {
       PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
       FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-      steps.registerFinishedListener(&callback);
-      steps.start();
+      steps.start(&callback);
       steps.update(200);
       steps.stop();
       steps.update(500);

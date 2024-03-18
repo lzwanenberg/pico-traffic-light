@@ -1,4 +1,5 @@
 #include "VehicularCyclePhase.hpp"
+#include "../../phase_steps/PhaseStep.hpp"
 #include "../../phase_steps/PhaseSteps.hpp"
 #include <vector>
 
@@ -9,33 +10,36 @@ using State = IVehicularTrafficSignalHead::State;
 VehicularCyclePhase::VehicularCyclePhase(Config config)
     : steps(PhaseSteps{
           {.steps =
-               std::vector<PhaseSteps::PhaseStep>{
-                   {.durationMs = config.timings.minimumRecallMs,
-                    .executionFunction =
-                        [config]() mutable {
-                          config.vehicularSignalHead->setState(
-                              State::GREEN_CONTINUOUS);
-                        }},
-                   {.durationMs = config.timings.amberClearanceTimeMs,
-                    .executionFunction =
-                        [config]() mutable {
-                          config.vehicularSignalHead->setState(
-                              State::AMBER_CONTINUOUS);
-                        }},
-                   {.durationMs = config.timings.redClearanceTimeMs,
-                    .executionFunction =
-                        [config]() mutable {
-                          config.vehicularSignalHead->setState(
-                              State::RED_CONTINUOUS);
-                        }},
+               std::vector<PhaseStep>{
+                   PhaseStep{
+                       {.initialDurationMs = config.timings.minimumRecallMs,
+                        .executionFunction =
+                            [config]() mutable {
+                              config.vehicularSignalHead->setState(
+                                  State::GREEN_CONTINUOUS);
+                            }}},
+                   PhaseStep{{.initialDurationMs =
+                                  config.timings.amberClearanceTimeMs,
+                              .executionFunction =
+                                  [config]() mutable {
+                                    config.vehicularSignalHead->setState(
+                                        State::AMBER_CONTINUOUS);
+                                  }}},
+                   PhaseStep{
+                       {.initialDurationMs = config.timings.redClearanceTimeMs,
+                        .executionFunction =
+                            [config]() mutable {
+                              config.vehicularSignalHead->setState(
+                                  State::RED_CONTINUOUS);
+                            }}},
                }}}),
       signalHead(config.vehicularSignalHead) {}
 
 void VehicularCyclePhase::registerFinishedListener(FinishedCallback *callback) {
-  steps.registerFinishedListener(callback);
+  this->finishedCallback = callback;
 }
 
-void VehicularCyclePhase::start() { steps.start(); }
+void VehicularCyclePhase::start() { steps.start(this->finishedCallback); }
 
 void VehicularCyclePhase::reset() {
   steps.stop();

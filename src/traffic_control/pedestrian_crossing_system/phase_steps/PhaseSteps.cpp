@@ -1,48 +1,38 @@
 #include "PhaseSteps.hpp"
+#include <iostream>
 
 namespace TrafficControl {
 
 PhaseSteps::PhaseSteps(Config config)
     : steps(config.steps), finishedCallback(nullptr), currentStepIndex(0),
-      elapsedTime(0), running(false) {}
+      stepFinishedHandler(std::bind(&PhaseSteps::handleStepFinished, this)) {}
 
-void PhaseSteps::registerFinishedListener(FinishedCallback *callback) {
+void PhaseSteps::start(FinishedCallback *callback) {
   this->finishedCallback = callback;
-}
-
-void PhaseSteps::start() {
   stop();
-  running = true;
-
   if (currentStepIndex >= steps.size())
     triggerFinishedCallback();
   else
-    steps[currentStepIndex].executionFunction();
+    steps[currentStepIndex].start(&stepFinishedHandler);
+}
+
+void PhaseSteps::handleStepFinished() {
+  currentStepIndex++;
+  if (currentStepIndex >= steps.size())
+    triggerFinishedCallback();
+  else
+    steps[currentStepIndex].start(&stepFinishedHandler);
 }
 
 void PhaseSteps::update(int deltaTimeMs) {
-  if (!running)
-    return;
-
-  elapsedTime += deltaTimeMs;
-
-  if (elapsedTime < steps[currentStepIndex].durationMs)
-    return;
-
-  currentStepIndex++;
-  elapsedTime = 0;
-
-  if (currentStepIndex >= steps.size()) {
-    running = false;
-    triggerFinishedCallback();
-  } else
-    steps[currentStepIndex].executionFunction();
+  steps[currentStepIndex].update(deltaTimeMs);
 }
 
 void PhaseSteps::stop() {
-  running = false;
+  if (steps.size() > 0)
+    steps[currentStepIndex].stop();
+
   currentStepIndex = 0;
-  elapsedTime = 0;
 }
 
 void PhaseSteps::triggerFinishedCallback() {

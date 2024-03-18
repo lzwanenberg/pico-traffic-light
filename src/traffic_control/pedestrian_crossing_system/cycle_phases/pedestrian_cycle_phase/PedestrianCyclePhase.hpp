@@ -24,6 +24,7 @@ public:
 
 private:
   IPedestrianSignalHead *signalHead;
+  FinishedCallback *finishedCallback;
   PhaseSteps steps;
 };
 } // namespace TrafficControl
