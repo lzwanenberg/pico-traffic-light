@@ -14,8 +14,7 @@ public:
 
   PhaseStep(Config config);
 
-  void registerFinishedListener(FinishedCallback *callback);
-  void start();
+  void start(FinishedCallback *callback);
   void extend(int timeMs);
   void stop();
   void update(int deltaTimeMs);

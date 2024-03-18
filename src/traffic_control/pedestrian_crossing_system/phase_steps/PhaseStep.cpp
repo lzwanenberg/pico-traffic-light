@@ -7,11 +7,8 @@ PhaseStep::PhaseStep(Config config)
       executionFunction(config.executionFunction),
       remainingTimeMs(config.initialDurationMs), running(false) {}
 
-void PhaseStep::registerFinishedListener(FinishedCallback *callback) {
+void PhaseStep::start(FinishedCallback *callback) {
   this->finishedCallback = callback;
-}
-
-void PhaseStep::start() {
   stop();
   running = true;
   executionFunction();

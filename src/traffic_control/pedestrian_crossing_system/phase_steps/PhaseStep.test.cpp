@@ -27,8 +27,7 @@ TEST_CASE("PhaseStep") {
 
       FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-      step.registerFinishedListener(&callback);
-      step.start();
+      step.start(&callback);
 
       REQUIRE(execute.calls == 1);
       REQUIRE(onFinished.calls == 0);
@@ -48,8 +47,7 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-        step.start();
+        step.start(&callback);
         step.update(400);
         step.update(400);
 
@@ -69,8 +67,7 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-        step.start();
+        step.start(&callback);
         step.update(400);
         step.update(400);
         step.update(400);
@@ -93,8 +90,7 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-        step.start();
+        step.start(&callback);
         step.update(400);
         step.update(400);
         step.extend(500);
@@ -121,8 +117,7 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-        step.start();
+        step.start(&callback);
         step.extend(900);
         step.update(400);
         step.update(400);
@@ -147,8 +142,6 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-
         REQUIRE_FALSE(step.isRunning());
       }
     }
@@ -165,8 +158,7 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-        step.start();
+        step.start(&callback);
         REQUIRE(step.isRunning());
         step.update(400);
         step.update(400);
@@ -190,8 +182,7 @@ TEST_CASE("PhaseStep") {
 
         FinishedCallback callback = [&onFinished]() { onFinished.call(); };
 
-        step.registerFinishedListener(&callback);
-        step.start();
+        step.start(&callback);
         step.update(400);
         step.update(400);
         step.extend(500);
