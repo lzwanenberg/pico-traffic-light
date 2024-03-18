@@ -17,11 +17,6 @@ public:
   void call() { calls++; };
 };
 
-struct PhaseStepMock {
-  FunctionMock executionFunction;
-  PhaseStep step;
-};
-
 PhaseStep createStep(FunctionMock &executionFunction, int durationMs = 1000) {
   return {.durationMs = durationMs,
           .executionFunction = [&executionFunction]() {
