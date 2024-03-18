@@ -17,14 +17,12 @@ public:
   };
 
   PedestrianCyclePhase(Config config);
-  void registerFinishedListener(FinishedCallback *callback) override;
-  void start() override;
+  void start(FinishedCallback *callback) override;
   void reset() override;
   void update(int deltaTimeMs) override;
 
 private:
   IPedestrianSignalHead *signalHead;
-  FinishedCallback *finishedCallback;
   PhaseSteps steps;
 };
 } // namespace TrafficControl

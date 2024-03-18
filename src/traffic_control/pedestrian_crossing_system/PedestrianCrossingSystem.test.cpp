@@ -32,11 +32,10 @@ struct TestContext {
 void initializePedestrianCyclePhaseMock(TestContext &context) {
   context.config.pedestrianPhase = &context.pedestrianCyclePhase.mock.get();
 
-  When(Method(context.pedestrianCyclePhase.mock, registerFinishedListener))
-      .Do([&](IPedestrianCyclePhase::FinishedCallback *callback) {
+  When(Method(context.pedestrianCyclePhase.mock, start))
+      .AlwaysDo([&](IPedestrianCyclePhase::FinishedCallback *callback) {
         context.pedestrianCyclePhase.finish = callback;
       });
-  When(Method(context.pedestrianCyclePhase.mock, start)).AlwaysReturn();
   When(Method(context.pedestrianCyclePhase.mock, reset)).AlwaysReturn();
   When(Method(context.pedestrianCyclePhase.mock, update)).AlwaysReturn();
 }
@@ -44,11 +43,10 @@ void initializePedestrianCyclePhaseMock(TestContext &context) {
 void initializeVehicularCyclePhaseMock(TestContext &context) {
   context.config.vehicularPhase = &context.vehicularCyclePhase.mock.get();
 
-  When(Method(context.vehicularCyclePhase.mock, registerFinishedListener))
-      .Do([&](IVehicularCyclePhase::FinishedCallback *callback) {
+  When(Method(context.vehicularCyclePhase.mock, start))
+      .AlwaysDo([&](IVehicularCyclePhase::FinishedCallback *callback) {
         context.vehicularCyclePhase.finish = callback;
       });
-  When(Method(context.vehicularCyclePhase.mock, start)).AlwaysReturn();
   When(Method(context.vehicularCyclePhase.mock, reset)).AlwaysReturn();
   When(Method(context.vehicularCyclePhase.mock, update)).AlwaysReturn();
 }

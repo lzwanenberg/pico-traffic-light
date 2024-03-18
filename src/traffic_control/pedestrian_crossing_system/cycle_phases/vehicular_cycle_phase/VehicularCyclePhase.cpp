@@ -35,11 +35,9 @@ VehicularCyclePhase::VehicularCyclePhase(Config config)
                }}}),
       signalHead(config.vehicularSignalHead) {}
 
-void VehicularCyclePhase::registerFinishedListener(FinishedCallback *callback) {
-  this->finishedCallback = callback;
+void VehicularCyclePhase::start(FinishedCallback *callback) {
+  steps.start(callback);
 }
-
-void VehicularCyclePhase::start() { steps.start(this->finishedCallback); }
 
 void VehicularCyclePhase::reset() {
   steps.stop();

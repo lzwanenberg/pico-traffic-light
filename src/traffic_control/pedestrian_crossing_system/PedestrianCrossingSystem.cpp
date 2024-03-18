@@ -7,19 +7,16 @@ using Config = PedestrianCrossingSystem::Config;
 
 PedestrianCrossingSystem::PedestrianCrossingSystem(Config config)
     : vehicularPhase(config.vehicularPhase),
-      pedestrianPhase(config.pedestrianPhase) {
-
-  vehicularPhase->registerFinishedListener(new std::function<void()>(std::bind(
-      &PedestrianCrossingSystem::handleVehicularPhaseFinished, this)));
-
-  pedestrianPhase->registerFinishedListener(new std::function<void()>(std::bind(
-      &PedestrianCrossingSystem::handlePedestrianPhaseFinished, this)));
-}
+      pedestrianPhase(config.pedestrianPhase),
+      vehicularPhaseFinishedHandler(new std::function<void()>(std::bind(
+          &PedestrianCrossingSystem::handleVehicularPhaseFinished, this))),
+      pedestrianPhaseFinishedHandler(new std::function<void()>(std::bind(
+          &PedestrianCrossingSystem::handlePedestrianPhaseFinished, this))) {}
 
 void PedestrianCrossingSystem::start() {
   vehicularPhase->reset();
   pedestrianPhase->reset();
-  vehicularPhase->start();
+  vehicularPhase->start(vehicularPhaseFinishedHandler);
 }
 
 void PedestrianCrossingSystem::update(int deltaTimeMs) {
@@ -28,11 +25,11 @@ void PedestrianCrossingSystem::update(int deltaTimeMs) {
 }
 
 void PedestrianCrossingSystem::handleVehicularPhaseFinished() {
-  pedestrianPhase->start();
+  pedestrianPhase->start(pedestrianPhaseFinishedHandler);
 }
 
 void PedestrianCrossingSystem::handlePedestrianPhaseFinished() {
-  vehicularPhase->start();
+  vehicularPhase->start(vehicularPhaseFinishedHandler);
 }
 
 } // namespace TrafficControl

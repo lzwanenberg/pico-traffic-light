@@ -35,12 +35,9 @@ PedestrianCyclePhase::PedestrianCyclePhase(Config config)
                }}}),
       signalHead(config.pedestrianSignalHead) {}
 
-void PedestrianCyclePhase::registerFinishedListener(
-    FinishedCallback *callback) {
-  this->finishedCallback = callback;
+void PedestrianCyclePhase::start(FinishedCallback *callback) {
+  steps.start(callback);
 }
-
-void PedestrianCyclePhase::start() { steps.start(this->finishedCallback); }
 
 void PedestrianCyclePhase::reset() {
   steps.stop();

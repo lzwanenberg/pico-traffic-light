@@ -56,8 +56,7 @@ TEST_CASE("VehicularCyclePhase") {
       initializeTestContext(context);
       VehicularCyclePhase phase(context.config);
 
-      phase.registerFinishedListener(&context.finishedCallback);
-      phase.start();
+      phase.start(&context.finishedCallback);
 
       Verify(Method(context.vehicularSignalHeadMock, setState)
                  .Using(State::GREEN_CONTINUOUS))
@@ -76,8 +75,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
-        phase.registerFinishedListener(&context.finishedCallback);
-        phase.start();
+        phase.start(&context.finishedCallback);
         phase.update(1000);
         phase.update(1999);
 
@@ -95,8 +93,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
-        phase.registerFinishedListener(&context.finishedCallback);
-        phase.start();
+        phase.start(&context.finishedCallback);
         phase.update(1000);
         phase.update(1999);
         phase.update(1); // 3000 ms passed (minimumRecallMs)
@@ -116,8 +113,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
-        phase.registerFinishedListener(&context.finishedCallback);
-        phase.start();
+        phase.start(&context.finishedCallback);
         phase.update(1000);
         phase.update(1999);
         phase.update(1); // 3000 ms passed
@@ -141,8 +137,7 @@ TEST_CASE("VehicularCyclePhase") {
         initializeTestContext(context, timings);
         VehicularCyclePhase phase(context.config);
 
-        phase.registerFinishedListener(&context.finishedCallback);
-        phase.start();
+        phase.start(&context.finishedCallback);
         phase.update(1000);
         phase.update(1999);
         phase.update(1); // 3000 ms passed
@@ -161,8 +156,7 @@ TEST_CASE("VehicularCyclePhase") {
       initializeTestContext(context);
       VehicularCyclePhase phase(context.config);
 
-      phase.registerFinishedListener(&context.finishedCallback);
-      phase.start();
+      phase.start(&context.finishedCallback);
       phase.update(100);
       phase.update(300);
       phase.update(200);
@@ -183,8 +177,7 @@ TEST_CASE("VehicularCyclePhase") {
       initializeTestContext(context, timings);
       VehicularCyclePhase phase(context.config);
 
-      phase.registerFinishedListener(&context.finishedCallback);
-      phase.start();
+      phase.start(&context.finishedCallback);
       phase.update(1000);
       phase.update(1999);
       phase.reset();
