@@ -15,5 +15,6 @@ public:
   virtual void start() = 0;
   virtual void reset() = 0;
   virtual void update(int deltaTimeMs) = 0;
+  virtual bool isRequested() = 0;
 };
 } // namespace TrafficControl

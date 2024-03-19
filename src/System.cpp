@@ -34,6 +34,7 @@ System::System(System::Config config)
                            config.cyclePhases.vehicular.redClearanceTimeMs}}}),
       pedestrianCyclePhase(TrafficControl::PedestrianCyclePhase{
           {.pedestrianSignalHead = &pedestrianSignalHead,
+           .pushButton = &pushButton,
            .timings =
                {.minimumRecallMs =
                     config.cyclePhases.pedestrian.minimumRecallMs,
@@ -43,8 +44,7 @@ System::System(System::Config config)
                     config.cyclePhases.pedestrian.redClearanceTimeMs}}}),
       pedestrianCrossingSystem(TrafficControl::PedestrianCrossingSystem{
           {.vehicularPhase = &vehicularCyclePhase,
-           .pedestrianPhase = &pedestrianCyclePhase,
-           .pushButton = &pushButton}}) {}
+           .pedestrianPhase = &pedestrianCyclePhase}}) {}
 
 void System::start() { pedestrianCrossingSystem.start(); }
 void System::update(int ms) { pedestrianCrossingSystem.update(ms); }

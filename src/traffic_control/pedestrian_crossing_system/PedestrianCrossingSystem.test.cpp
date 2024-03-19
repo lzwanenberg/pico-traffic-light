@@ -15,11 +15,6 @@ using IVehicularCyclePhase = TrafficControl::IVehicularCyclePhase;
 using IPushButton = TrafficControl::IPushButton;
 using Config = TrafficControl::PedestrianCrossingSystem::Config;
 
-struct PushButtonMock {
-  Mock<IPushButton> mock;
-  IPushButton::RequestReceivedCallback *requestReceived;
-};
-
 struct PedestrianCyclePhaseMock {
   Mock<IPedestrianCyclePhase> mock;
   IPedestrianCyclePhase::FinishedCallback *finish;
@@ -35,19 +30,7 @@ struct TestContext {
 
   PedestrianCyclePhaseMock pedestrianCyclePhase;
   VehicularCyclePhaseMock vehicularCyclePhase;
-  PushButtonMock pushButton;
 };
-
-void initializePushButtonMock(TestContext &context) {
-  context.config.pushButton = &context.pushButton.mock.get();
-
-  When(Method(context.pushButton.mock, registerRequestReceivedListener))
-      .Do([&](IPushButton::RequestReceivedCallback *callback) {
-        context.pushButton.requestReceived = callback;
-      });
-  When(Method(context.pushButton.mock, update)).AlwaysReturn();
-  When(Method(context.pushButton.mock, completeRequest)).AlwaysReturn();
-}
 
 void initializePedestrianCyclePhaseMock(TestContext &context) {
   context.config.pedestrianPhase = &context.pedestrianCyclePhase.mock.get();
@@ -59,6 +42,8 @@ void initializePedestrianCyclePhaseMock(TestContext &context) {
   When(Method(context.pedestrianCyclePhase.mock, start)).AlwaysReturn();
   When(Method(context.pedestrianCyclePhase.mock, reset)).AlwaysReturn();
   When(Method(context.pedestrianCyclePhase.mock, update)).AlwaysReturn();
+  When(Method(context.pedestrianCyclePhase.mock, isRequested))
+      .AlwaysReturn(true); // TODO
 }
 
 void initializeVehicularCyclePhaseMock(TestContext &context) {
@@ -74,7 +59,6 @@ void initializeVehicularCyclePhaseMock(TestContext &context) {
 }
 
 void initializeTestContext(TestContext &context) {
-  initializePushButtonMock(context);
   initializePedestrianCyclePhaseMock(context);
   initializeVehicularCyclePhaseMock(context);
 }

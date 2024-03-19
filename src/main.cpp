@@ -53,7 +53,7 @@ int main() {
   config.cyclePhases.pedestrian.minimumRecallMs = 8000;
   config.cyclePhases.pedestrian.greenFlashingClearanceTimeMs = 4000;
   config.cyclePhases.pedestrian.redClearanceTimeMs = 3000;
-  config.cyclePhases.vehicular.minimumRecallMs = 8000;
+  config.cyclePhases.vehicular.minimumRecallMs = 12000;
   config.cyclePhases.vehicular.amberClearanceTimeMs = 3000;
   config.cyclePhases.vehicular.redClearanceTimeMs = 2000;
 

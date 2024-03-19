@@ -12,7 +12,6 @@ public:
   struct Config {
     IVehicularCyclePhase *vehicularPhase;
     IPedestrianCyclePhase *pedestrianPhase;
-    IPushButton *pushButton;
   };
 
   PedestrianCrossingSystem(Config config);
@@ -22,10 +21,8 @@ public:
 private:
   IVehicularCyclePhase *vehicularPhase;
   IPedestrianCyclePhase *pedestrianPhase;
-  IPushButton *pushButton;
 
   void handleVehicularPhaseFinished();
   void handlePedestrianPhaseFinished();
-  IPushButton::RequestResponse handleButtonPush();
 };
 } // namespace TrafficControl
