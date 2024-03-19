@@ -36,6 +36,11 @@ void PhaseStep::stop() {
   remainingTimeMs = initialDurationMs;
 }
 
+int PhaseStep::getDuration() { return this->initialDurationMs; }
+PhaseStep::ExecutionFunction PhaseStep::getFunction() {
+  return this->executionFunction;
+}
+
 bool PhaseStep::isRunning() { return running; }
 
 void PhaseStep::triggerFinishedCallback() {

@@ -17,7 +17,7 @@ void PhaseSteps::start() {
   if (currentStepIndex >= steps.size())
     triggerFinishedCallback();
   else
-    steps[currentStepIndex].executionFunction();
+    steps[currentStepIndex].getFunction()();
 }
 
 void PhaseSteps::update(int deltaTimeMs) {
@@ -26,7 +26,7 @@ void PhaseSteps::update(int deltaTimeMs) {
 
   elapsedTime += deltaTimeMs;
 
-  if (elapsedTime < steps[currentStepIndex].durationMs)
+  if (elapsedTime < steps[currentStepIndex].getDuration())
     return;
 
   currentStepIndex++;
@@ -36,7 +36,7 @@ void PhaseSteps::update(int deltaTimeMs) {
     running = false;
     triggerFinishedCallback();
   } else
-    steps[currentStepIndex].executionFunction();
+    steps[currentStepIndex].getFunction()();
 }
 
 void PhaseSteps::stop() {

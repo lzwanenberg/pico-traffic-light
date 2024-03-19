@@ -3,11 +3,12 @@
 #include <iostream>
 #include <vector>
 
+#include "PhaseStep.hpp"
 #include "PhaseSteps.hpp"
 
 namespace {
 using PhaseSteps = TrafficControl::PhaseSteps;
-using PhaseStep = PhaseSteps::PhaseStep;
+using PhaseStep = TrafficControl::PhaseStep;
 using Config = PhaseSteps::Config;
 using FinishedCallback = PhaseSteps::FinishedCallback;
 
@@ -18,10 +19,10 @@ public:
 };
 
 PhaseStep createStep(FunctionMock &executionFunction, int durationMs = 1000) {
-  return {.durationMs = durationMs,
-          .executionFunction = [&executionFunction]() {
-            executionFunction.call();
-          }};
+  return PhaseStep{{.initialDurationMs = durationMs,
+                    .executionFunction = [&executionFunction]() {
+                      executionFunction.call();
+                    }}};
 }
 
 TEST_CASE("PhaseSteps") {

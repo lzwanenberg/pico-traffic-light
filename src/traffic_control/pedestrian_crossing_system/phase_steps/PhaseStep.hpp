@@ -20,6 +20,9 @@ public:
   void update(int deltaTimeMs);
   bool isRunning();
 
+  int getDuration();               // TODO: temp
+  ExecutionFunction getFunction(); // TODO: temp
+
 private:
   int initialDurationMs;
   ExecutionFunction executionFunction;

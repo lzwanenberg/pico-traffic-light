@@ -1,4 +1,5 @@
 #include "PedestrianCyclePhase.hpp"
+#include "../../phase_steps/PhaseStep.hpp"
 #include "../../phase_steps/PhaseSteps.hpp"
 #include <vector>
 
@@ -9,25 +10,28 @@ using State = IPedestrianSignalHead::State;
 PedestrianCyclePhase::PedestrianCyclePhase(Config config)
     : steps(PhaseSteps{
           {.steps =
-               std::vector<PhaseSteps::PhaseStep>{
-                   {.durationMs = config.timings.minimumRecallMs,
-                    .executionFunction =
-                        [config]() mutable {
-                          config.pedestrianSignalHead->setState(
-                              State::GREEN_CONTINUOUS);
-                        }},
-                   {.durationMs = config.timings.greenFlashingClearanceTimeMs,
-                    .executionFunction =
-                        [config]() mutable {
-                          config.pedestrianSignalHead->setState(
-                              State::GREEN_FLASHING);
-                        }},
-                   {.durationMs = config.timings.redClearanceTimeMs,
-                    .executionFunction =
-                        [config]() mutable {
-                          config.pedestrianSignalHead->setState(
-                              State::RED_CONTINUOUS);
-                        }},
+               std::vector<PhaseStep>{
+                   PhaseStep{
+                       {.initialDurationMs = config.timings.minimumRecallMs,
+                        .executionFunction =
+                            [config]() mutable {
+                              config.pedestrianSignalHead->setState(
+                                  State::GREEN_CONTINUOUS);
+                            }}},
+                   PhaseStep{{.initialDurationMs =
+                                  config.timings.greenFlashingClearanceTimeMs,
+                              .executionFunction =
+                                  [config]() mutable {
+                                    config.pedestrianSignalHead->setState(
+                                        State::GREEN_FLASHING);
+                                  }}},
+                   PhaseStep{
+                       {.initialDurationMs = config.timings.redClearanceTimeMs,
+                        .executionFunction =
+                            [config]() mutable {
+                              config.pedestrianSignalHead->setState(
+                                  State::RED_CONTINUOUS);
+                            }}},
                }}}),
       signalHead(config.pedestrianSignalHead) {}
 
