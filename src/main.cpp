@@ -1,5 +1,6 @@
 #include "System.hpp"
 #include "pico_w/PicoW.hpp"
+#include "pico_w/reader/IReader.hpp"
 #include "pico_w/reader/bootsel_button_reader/BootselButtonReader.hpp"
 #include "pico_w/writer/IWriter.hpp"
 #include "pico_w/writer/gpio_writer/GPIOWriter.hpp"
@@ -17,13 +18,17 @@ using VehicularCyclePhase = TrafficControl::VehicularCyclePhase;
 using PedestrianCyclePhase = TrafficControl::PedestrianCyclePhase;
 using Pin = PicoW::Pin;
 
-std::function<void(bool)> bind(PicoW::IWriter *writer) {
+std::function<void(bool)> bindWriter(PicoW::IWriter *writer) {
   return std::bind(&PicoW::IWriter::write, writer, std::placeholders::_1);
+}
+
+std::function<bool()> bindReader(PicoW::IReader *reader) {
+  return std::bind(&PicoW::IReader::read, reader);
 }
 
 int main() {
   PicoW::initialize();
-  PicoW::BootselButtonReader button;
+  PicoW::BootselButtonReader bootselButton;
   PicoW::OnboardLEDWriter onboardLED;
 
   PicoW::GPIOWriter vehicularRed(Pin::GP6);
@@ -34,11 +39,14 @@ int main() {
 
   System::Config config;
 
-  config.signalHeadControls.vehicular.red = bind(&vehicularRed);
-  config.signalHeadControls.vehicular.amber = bind(&vehicularAmber);
-  config.signalHeadControls.vehicular.green = bind(&vehicularGreen);
-  config.signalHeadControls.pedestrian.red = bind(&pedestrianRed);
-  config.signalHeadControls.pedestrian.green = bind(&pedestrianGreen);
+  config.signalHeadControls.vehicular.red = bindWriter(&vehicularRed);
+  config.signalHeadControls.vehicular.amber = bindWriter(&vehicularAmber);
+  config.signalHeadControls.vehicular.green = bindWriter(&vehicularGreen);
+  config.signalHeadControls.pedestrian.red = bindWriter(&pedestrianRed);
+  config.signalHeadControls.pedestrian.green = bindWriter(&pedestrianGreen);
+
+  config.pushButtonControl.read = bindReader(&bootselButton);
+  config.pushButtonControl.writeFeedback = bindWriter(&onboardLED);
 
   config.aspect.flashingIntervalMs = 500;
 
@@ -54,14 +62,6 @@ int main() {
   system.start();
   while (true) {
     system.update(10);
-
-    if (button.read()) {
-      onboardLED.write(1);
-    } else {
-      onboardLED.write(0);
-    }
-
-    // TODO, actually measure delta time and account for time taken to update
     PicoW::sleep_ms(10);
   }
 }

@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "PedestrianCrossingSystem.hpp"
+#include "../push_button/IPushButton.hpp"
 #include "cycle_phases/pedestrian_cycle_phase/IPedestrianCyclePhase.hpp"
 #include "cycle_phases/vehicular_cycle_phase/IVehicularCyclePhase.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -11,7 +12,13 @@ using namespace fakeit;
 using PedestrianCrossingSystem = TrafficControl::PedestrianCrossingSystem;
 using IPedestrianCyclePhase = TrafficControl::IPedestrianCyclePhase;
 using IVehicularCyclePhase = TrafficControl::IVehicularCyclePhase;
+using IPushButton = TrafficControl::IPushButton;
 using Config = TrafficControl::PedestrianCrossingSystem::Config;
+
+struct PushButtonMock {
+  Mock<IPushButton> mock;
+  IPushButton::RequestReceivedCallback *requestReceived;
+};
 
 struct PedestrianCyclePhaseMock {
   Mock<IPedestrianCyclePhase> mock;
@@ -25,9 +32,22 @@ struct VehicularCyclePhaseMock {
 
 struct TestContext {
   Config config;
+
   PedestrianCyclePhaseMock pedestrianCyclePhase;
   VehicularCyclePhaseMock vehicularCyclePhase;
+  PushButtonMock pushButton;
 };
+
+void initializePushButtonMock(TestContext &context) {
+  context.config.pushButton = &context.pushButton.mock.get();
+
+  When(Method(context.pushButton.mock, registerRequestReceivedListener))
+      .Do([&](IPushButton::RequestReceivedCallback *callback) {
+        context.pushButton.requestReceived = callback;
+      });
+  When(Method(context.pushButton.mock, update)).AlwaysReturn();
+  When(Method(context.pushButton.mock, completeRequest)).AlwaysReturn();
+}
 
 void initializePedestrianCyclePhaseMock(TestContext &context) {
   context.config.pedestrianPhase = &context.pedestrianCyclePhase.mock.get();
@@ -54,6 +74,7 @@ void initializeVehicularCyclePhaseMock(TestContext &context) {
 }
 
 void initializeTestContext(TestContext &context) {
+  initializePushButtonMock(context);
   initializePedestrianCyclePhaseMock(context);
   initializeVehicularCyclePhaseMock(context);
 }

@@ -3,6 +3,7 @@
 #include "traffic_control/pedestrian_crossing_system/PedestrianCrossingSystem.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/pedestrian_cycle_phase/PedestrianCyclePhase.hpp"
 #include "traffic_control/pedestrian_crossing_system/cycle_phases/vehicular_cycle_phase/VehicularCyclePhase.hpp"
+#include "traffic_control/push_button/PushButton.hpp"
 #include "traffic_control/signal_head/pedestrian_signal_head/PedestrianSignalHead.hpp"
 #include "traffic_control/signal_head/vehicular_traffic_signal_head/VehicularTrafficSignalHead.hpp"
 
@@ -21,6 +22,8 @@ System::System(System::Config config)
                    .red = config.signalHeadControls.pedestrian.red,
                    .green = config.signalHeadControls.pedestrian.green,
                }}}),
+      pushButton(TrafficControl::PushButton{
+          {.deviceControl = config.pushButtonControl}}),
       vehicularCyclePhase(TrafficControl::VehicularCyclePhase{
           {.vehicularSignalHead = &vehicularSignalHead,
            .timings = {.minimumRecallMs =
@@ -38,10 +41,10 @@ System::System(System::Config config)
                     config.cyclePhases.pedestrian.greenFlashingClearanceTimeMs,
                 .redClearanceTimeMs =
                     config.cyclePhases.pedestrian.redClearanceTimeMs}}}),
-      pedestrianCrossingSystem(TrafficControl::PedestrianCrossingSystem{{
-          .vehicularPhase = &vehicularCyclePhase,
-          .pedestrianPhase = &pedestrianCyclePhase,
-      }}) {}
+      pedestrianCrossingSystem(TrafficControl::PedestrianCrossingSystem{
+          {.vehicularPhase = &vehicularCyclePhase,
+           .pedestrianPhase = &pedestrianCyclePhase,
+           .pushButton = &pushButton}}) {}
 
 void System::start() { pedestrianCrossingSystem.start(); }
 void System::update(int ms) { pedestrianCrossingSystem.update(ms); }
