@@ -6,6 +6,8 @@ namespace TrafficControl {
 
 using State = IVehicularTrafficSignalHead::State;
 
+#define GREEN_STEP_INDEX 0
+
 VehicularCyclePhase::VehicularCyclePhase(Config config)
     : steps(PhaseSteps{
           {.steps =
@@ -36,6 +38,11 @@ void VehicularCyclePhase::registerFinishedListener(FinishedCallback *callback) {
 }
 
 void VehicularCyclePhase::start() { steps.start(); }
+
+void VehicularCyclePhase::extend(int durationMs) {
+  if (steps.getCurrentStepIndex() == GREEN_STEP_INDEX)
+    steps.extendCurrentStep(durationMs);
+}
 
 void VehicularCyclePhase::reset() {
   steps.stop();

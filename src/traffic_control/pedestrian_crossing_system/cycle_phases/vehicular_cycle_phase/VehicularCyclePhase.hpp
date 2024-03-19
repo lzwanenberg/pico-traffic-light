@@ -19,6 +19,7 @@ public:
   VehicularCyclePhase(Config config);
   void registerFinishedListener(FinishedCallback *callback) override;
   void start() override;
+  void extend(int durationMs) override;
   void reset() override;
   void update(int deltaTimeMs) override;
 

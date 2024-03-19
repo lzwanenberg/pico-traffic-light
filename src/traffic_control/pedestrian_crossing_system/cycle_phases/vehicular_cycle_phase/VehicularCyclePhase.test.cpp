@@ -201,5 +201,53 @@ TEST_CASE("VehicularCyclePhase") {
       Verify(Method(*context.onFinishedMock, operator())).Exactly(0);
     }
   }
+
+  SECTION(".extend") {
+    SECTION("when current state is green") {
+      SECTION("it extends the current step") {
+        Timings timings = {.minimumRecallMs = 3000,
+                           .amberClearanceTimeMs = 2000,
+                           .redClearanceTimeMs = 1000};
+        TestContext context;
+        initializeTestContext(context, timings);
+        VehicularCyclePhase phase(context.config);
+
+        phase.registerFinishedListener(&context.finishedCallback);
+        phase.start();
+        phase.update(1000);
+        phase.update(1999);
+        phase.extend(1000);
+        phase.update(1);
+
+        Verify(Method(context.vehicularSignalHeadMock, setState)).Exactly(1);
+
+        phase.update(999); // 1000 ms passed after extend
+
+        Verify(Method(context.vehicularSignalHeadMock, setState)).Exactly(2);
+      }
+    }
+
+    SECTION("when current state is not green") {
+      SECTION("it does not extend the current step") {
+        Timings timings = {.minimumRecallMs = 3000,
+                           .amberClearanceTimeMs = 2000,
+                           .redClearanceTimeMs = 1000};
+        TestContext context;
+        initializeTestContext(context, timings);
+        VehicularCyclePhase phase(context.config);
+
+        phase.registerFinishedListener(&context.finishedCallback);
+        phase.start();
+        phase.update(1000);
+        phase.update(1999);
+        phase.update(1);
+        phase.extend(100000); // this should be ignored
+        phase.update(2000);
+        phase.update(1000);
+
+        Verify(Method(context.vehicularSignalHeadMock, setState)).Exactly(3);
+      }
+    }
+  }
 }
 } // namespace
