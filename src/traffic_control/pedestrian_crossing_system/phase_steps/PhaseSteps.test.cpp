@@ -173,5 +173,117 @@ TEST_CASE("PhaseSteps") {
       REQUIRE(onFinished.calls == 0);
     }
   }
+
+  SECTION(".getCurrentStepIndex") {
+    SECTION("when not running") {
+      SECTION("it returns -1") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+
+        REQUIRE(steps.getCurrentStepIndex() == -1);
+      }
+    }
+
+    SECTION("when started but no time has passed") {
+      SECTION("it returns 0") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.start();
+
+        REQUIRE(steps.getCurrentStepIndex() == 0);
+      }
+    }
+
+    SECTION("when second step is being executed") {
+      SECTION("it returns 1") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.start();
+        steps.update(200);
+        steps.update(350);
+
+        REQUIRE(steps.getCurrentStepIndex() == 1);
+      }
+    }
+
+    SECTION("when all steps have been executed") {
+      SECTION("it returns -1") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.start();
+        steps.update(200);
+        steps.update(299);
+        steps.update(100);
+        steps.update(500);
+        steps.update(500);
+
+        REQUIRE(steps.getCurrentStepIndex() == -1);
+      }
+    }
+
+    SECTION("when .stop has been called") {
+      SECTION("it returns -1") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.start();
+        steps.update(200);
+        steps.stop();
+        steps.update(500);
+        steps.update(500);
+
+        REQUIRE(steps.getCurrentStepIndex() == -1);
+      }
+    }
+  }
 }
 } // namespace

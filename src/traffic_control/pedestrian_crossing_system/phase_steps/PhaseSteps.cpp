@@ -22,6 +22,10 @@ void PhaseSteps::start() {
   }
 }
 
+int PhaseSteps::getCurrentStepIndex() {
+  return running ? currentStepIndex : -1;
+}
+
 void PhaseSteps::update(int deltaTimeMs) {
   if (!running)
     return;
