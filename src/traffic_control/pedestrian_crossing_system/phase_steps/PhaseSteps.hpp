@@ -23,6 +23,7 @@ public:
   void stop();
   void update(int deltaTimeMs);
   int getCurrentStepIndex();
+  void extendCurrentStep(int timeMs);
 
 private:
   std::vector<PhaseStep> steps;

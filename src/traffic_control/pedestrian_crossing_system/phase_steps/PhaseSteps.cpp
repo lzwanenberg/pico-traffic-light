@@ -26,6 +26,14 @@ int PhaseSteps::getCurrentStepIndex() {
   return running ? currentStepIndex : -1;
 }
 
+void PhaseSteps::extendCurrentStep(int timeMs) {
+  if (!running)
+    return;
+
+  if (currentStepRemainingTimeMs < timeMs)
+    currentStepRemainingTimeMs = timeMs;
+}
+
 void PhaseSteps::update(int deltaTimeMs) {
   if (!running)
     return;

@@ -285,5 +285,92 @@ TEST_CASE("PhaseSteps") {
       }
     }
   }
+
+  SECTION(".extendCurrentStep") {
+    SECTION("when steps are not running") {
+      SECTION("it does not affect execution") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.extendCurrentStep(5000);
+        steps.start();
+        steps.update(200);
+        steps.extendCurrentStep(200);
+        steps.update(299);
+        steps.update(1);
+
+        REQUIRE(step1Fn.calls == 1);
+        REQUIRE(step2Fn.calls == 1);
+        REQUIRE(onFinished.calls == 0);
+      }
+    }
+
+    SECTION("when remaining time for step is greater than extension time") {
+      SECTION("it does not affect execution") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.start();
+        steps.update(200);
+        steps.extendCurrentStep(200);
+        steps.update(299);
+        steps.update(1);
+
+        REQUIRE(step1Fn.calls == 1);
+        REQUIRE(step2Fn.calls == 1);
+        REQUIRE(onFinished.calls == 0);
+      }
+    }
+
+    SECTION("when remaining time for step is lesser than extension time") {
+      SECTION("it extends the execution time for current step") {
+        FunctionMock onFinished;
+
+        FunctionMock step1Fn;
+        FunctionMock step2Fn;
+
+        PhaseStep step1 = createStep(step1Fn, 500);
+        PhaseStep step2 = createStep(step2Fn, 1000);
+
+        PhaseSteps steps({.steps = std::vector<PhaseStep>{step1, step2}});
+        FinishedCallback callback = [&onFinished]() { onFinished.call(); };
+
+        steps.registerFinishedListener(&callback);
+        steps.start();
+        steps.update(200);
+        steps.update(299);
+        steps.extendCurrentStep(200);
+        steps.update(1);
+
+        REQUIRE(step1Fn.calls == 1);
+        REQUIRE(step2Fn.calls == 0);
+        REQUIRE(onFinished.calls == 0);
+
+        steps.update(199);
+
+        REQUIRE(step1Fn.calls == 1);
+        REQUIRE(step2Fn.calls == 1);
+        REQUIRE(onFinished.calls == 0);
+      }
+    }
+  }
 }
 } // namespace
