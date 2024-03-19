@@ -4,7 +4,7 @@ namespace TrafficControl {
 
 PhaseSteps::PhaseSteps(Config config)
     : steps(config.steps), finishedCallback(nullptr), currentStepIndex(0),
-      elapsedTime(0), running(false) {}
+      currentStepRemainingTimeMs(0), running(false) {}
 
 void PhaseSteps::registerFinishedListener(FinishedCallback *callback) {
   this->finishedCallback = callback;
@@ -16,33 +16,36 @@ void PhaseSteps::start() {
 
   if (currentStepIndex >= steps.size())
     triggerFinishedCallback();
-  else
+  else {
+    currentStepRemainingTimeMs = steps[currentStepIndex].initialDurationMs;
     steps[currentStepIndex].executionFunction();
+  }
 }
 
 void PhaseSteps::update(int deltaTimeMs) {
   if (!running)
     return;
 
-  elapsedTime += deltaTimeMs;
-
-  if (elapsedTime < steps[currentStepIndex].durationMs)
+  currentStepRemainingTimeMs -= deltaTimeMs;
+  if (currentStepRemainingTimeMs > 0)
     return;
 
   currentStepIndex++;
-  elapsedTime = 0;
 
   if (currentStepIndex >= steps.size()) {
+    currentStepRemainingTimeMs = 0;
     running = false;
     triggerFinishedCallback();
-  } else
+  } else {
+    currentStepRemainingTimeMs = steps[currentStepIndex].initialDurationMs;
     steps[currentStepIndex].executionFunction();
+  }
 }
 
 void PhaseSteps::stop() {
   running = false;
   currentStepIndex = 0;
-  elapsedTime = 0;
+  currentStepRemainingTimeMs = 0;
 }
 
 void PhaseSteps::triggerFinishedCallback() {

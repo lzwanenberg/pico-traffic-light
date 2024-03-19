@@ -22,8 +22,9 @@ struct PhaseStepMock {
   PhaseStep step;
 };
 
-PhaseStep createStep(FunctionMock &executionFunction, int durationMs = 1000) {
-  return {.durationMs = durationMs,
+PhaseStep createStep(FunctionMock &executionFunction,
+                     int initialDurationMs = 1000) {
+  return {.initialDurationMs = initialDurationMs,
           .executionFunction = [&executionFunction]() {
             executionFunction.call();
           }};

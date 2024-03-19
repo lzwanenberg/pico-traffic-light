@@ -8,7 +8,7 @@ public:
   using FinishedCallback = std::function<void()>;
 
   struct PhaseStep {
-    int durationMs;
+    int initialDurationMs;
     ExecutionFunction executionFunction;
   };
 
@@ -27,7 +27,7 @@ private:
   std::vector<PhaseStep> steps;
   FinishedCallback *finishedCallback;
   int currentStepIndex;
-  int elapsedTime;
+  int currentStepRemainingTimeMs;
   bool running;
 
   void triggerFinishedCallback();

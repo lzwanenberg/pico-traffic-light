@@ -10,19 +10,20 @@ PedestrianCyclePhase::PedestrianCyclePhase(Config config)
     : steps(PhaseSteps{
           {.steps =
                std::vector<PhaseSteps::PhaseStep>{
-                   {.durationMs = config.timings.minimumRecallMs,
+                   {.initialDurationMs = config.timings.minimumRecallMs,
                     .executionFunction =
                         [config]() mutable {
                           config.pedestrianSignalHead->setState(
                               State::GREEN_CONTINUOUS);
                         }},
-                   {.durationMs = config.timings.greenFlashingClearanceTimeMs,
+                   {.initialDurationMs =
+                        config.timings.greenFlashingClearanceTimeMs,
                     .executionFunction =
                         [config]() mutable {
                           config.pedestrianSignalHead->setState(
                               State::GREEN_FLASHING);
                         }},
-                   {.durationMs = config.timings.redClearanceTimeMs,
+                   {.initialDurationMs = config.timings.redClearanceTimeMs,
                     .executionFunction =
                         [config]() mutable {
                           config.pedestrianSignalHead->setState(
