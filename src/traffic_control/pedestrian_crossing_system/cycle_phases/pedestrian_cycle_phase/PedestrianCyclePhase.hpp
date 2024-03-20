@@ -1,7 +1,7 @@
 #pragma once
-#include "../../../push_button/IPushButton.hpp"
-#include "../../../signal_head/pedestrian_signal_head/IPedestrianSignalHead.hpp"
-#include "../../phase_steps/PhaseSteps.hpp"
+#include "../../../physical_components/push_button/IPushButton.hpp"
+#include "../../../physical_components/signal_head/pedestrian_signal_head/IPedestrianSignalHead.hpp"
+#include "../phase_steps/PhaseSteps.hpp"
 #include "IPedestrianCyclePhase.hpp"
 #include <iostream>
 

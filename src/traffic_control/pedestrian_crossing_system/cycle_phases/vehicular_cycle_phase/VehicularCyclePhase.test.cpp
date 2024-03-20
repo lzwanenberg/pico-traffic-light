@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "VehicularCyclePhase.hpp"
-#include "../../../signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
+#include "../../../physical_components/signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <fakeit.hpp>
 #include <iostream>

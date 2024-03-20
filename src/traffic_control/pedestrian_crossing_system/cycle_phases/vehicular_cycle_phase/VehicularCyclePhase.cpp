@@ -1,5 +1,5 @@
 #include "VehicularCyclePhase.hpp"
-#include "../../phase_steps/PhaseSteps.hpp"
+#include "../phase_steps/PhaseSteps.hpp"
 #include <vector>
 
 namespace TrafficControl {

@@ -1,5 +1,5 @@
 #include "PedestrianCyclePhase.hpp"
-#include "../../phase_steps/PhaseSteps.hpp"
+#include "../phase_steps/PhaseSteps.hpp"
 #include <vector>
 #define GREEN_STEP_INDEX 0
 

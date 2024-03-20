@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
 
-#include "../../aspect/Aspect.hpp"
+#include "../aspect/Aspect.hpp"
 #include "PedestrianSignalHead.hpp"
 
 namespace {

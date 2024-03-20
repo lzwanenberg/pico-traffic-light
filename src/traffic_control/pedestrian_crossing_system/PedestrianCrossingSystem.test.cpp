@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "PedestrianCrossingSystem.hpp"
-#include "../push_button/IPushButton.hpp"
+#include "../physical_components/push_button/IPushButton.hpp"
 #include "cycle_phases/pedestrian_cycle_phase/IPedestrianCyclePhase.hpp"
 #include "cycle_phases/vehicular_cycle_phase/IVehicularCyclePhase.hpp"
 #include <catch2/catch_test_macros.hpp>

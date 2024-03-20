@@ -1,5 +1,5 @@
 #include "VehicularTrafficSignalHead.hpp"
-#include "../../aspect/Aspect.hpp"
+#include "../aspect/Aspect.hpp"
 
 namespace TrafficControl {
 VehicularTrafficSignalHead::VehicularTrafficSignalHead(Config config)

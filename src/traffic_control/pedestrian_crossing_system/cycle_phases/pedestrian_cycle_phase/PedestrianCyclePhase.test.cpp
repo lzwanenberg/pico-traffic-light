@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "PedestrianCyclePhase.hpp"
-#include "../../../signal_head/pedestrian_signal_head/IPedestrianSignalHead.hpp"
+#include "../../../physical_components/signal_head/pedestrian_signal_head/IPedestrianSignalHead.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <fakeit.hpp>
 #include <iostream>

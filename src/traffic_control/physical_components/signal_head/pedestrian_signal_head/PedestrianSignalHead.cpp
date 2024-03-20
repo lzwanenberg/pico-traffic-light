@@ -1,5 +1,5 @@
 #include "PedestrianSignalHead.hpp"
-#include "../../aspect/Aspect.hpp"
+#include "../aspect/Aspect.hpp"
 
 namespace TrafficControl {
 PedestrianSignalHead::PedestrianSignalHead(Config config)

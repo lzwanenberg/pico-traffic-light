@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
-#include "../../phase_steps/PhaseSteps.hpp"
+#include "../../../physical_components/signal_head/vehicular_traffic_signal_head/IVehicularTrafficSignalHead.hpp"
+#include "../phase_steps/PhaseSteps.hpp"
 #include "IVehicularCyclePhase.hpp"
 #include <iostream>
 
