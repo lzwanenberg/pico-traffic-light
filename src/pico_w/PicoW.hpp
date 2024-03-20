@@ -1,4 +1,4 @@
 namespace PicoW {
 bool initialize();
-void sleep_ms(int ms);
+void sleepMs(int ms);
 } // namespace PicoW

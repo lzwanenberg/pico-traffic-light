@@ -6,6 +6,7 @@
 #include "traffic_control/physical_components/signal_head/aspect/Aspect.hpp"
 #include "traffic_control/physical_components/signal_head/pedestrian_signal_head/PedestrianSignalHead.hpp"
 #include "traffic_control/physical_components/signal_head/vehicular_traffic_signal_head/VehicularTrafficSignalHead.hpp"
+#include <functional>
 
 using DeviceControlFunction = TrafficControl::Aspect::DeviceControlFunction;
 using PushButton = TrafficControl::PushButton;
@@ -13,6 +14,13 @@ using PushButton = TrafficControl::PushButton;
 class System {
 public:
   struct Config {
+    int updateIntervalMs;
+
+    struct Controller {
+      std::function<void()> initialize;
+      std::function<void(int)> sleepMs;
+    } controller;
+
     struct Aspect {
       int flashingIntervalMs;
     } aspect;
@@ -46,10 +54,11 @@ public:
   };
 
   System(Config config);
-  void start();
-  void update(int deltaTimeMs);
+  void run();
 
 private:
+  int updateIntervalMs;
+  Config::Controller controller;
   TrafficControl::VehicularTrafficSignalHead vehicularSignalHead;
   TrafficControl::PedestrianSignalHead pedestrianSignalHead;
   TrafficControl::PushButton pushButton;

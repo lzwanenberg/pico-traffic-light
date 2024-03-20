@@ -26,18 +26,23 @@ std::function<bool()> bindReader(PicoW::IReader *reader) {
   return std::bind(&PicoW::IReader::read, reader);
 }
 
-int main() {
-  PicoW::initialize();
-  PicoW::BootselButtonReader bootselButton;
-  PicoW::OnboardLEDWriter onboardLED;
-
-  PicoW::GPIOWriter vehicularRed(Pin::GP6);
-  PicoW::GPIOWriter vehicularAmber(Pin::GP7);
-  PicoW::GPIOWriter vehicularGreen(Pin::GP8);
-  PicoW::GPIOWriter pedestrianRed(Pin::GP27);
-  PicoW::GPIOWriter pedestrianGreen(Pin::GP26);
+System::Config loadConfig() {
+  static PicoW::BootselButtonReader bootselButton;
+  static PicoW::OnboardLEDWriter onboardLED;
+  static PicoW::GPIOWriter vehicularRed(Pin::GP6);
+  static PicoW::GPIOWriter vehicularAmber(Pin::GP7);
+  static PicoW::GPIOWriter vehicularGreen(Pin::GP8);
+  static PicoW::GPIOWriter pedestrianRed(Pin::GP27);
+  static PicoW::GPIOWriter pedestrianGreen(Pin::GP26);
+  static std::function<void()> initialize = []() { PicoW::initialize; };
+  static std::function<void(int)> sleepMs = [](int ms) { PicoW::sleepMs(ms); };
 
   System::Config config;
+
+  config.updateIntervalMs = 10;
+
+  config.controller.initialize = initialize;
+  config.controller.sleepMs = sleepMs;
 
   config.signalHeadControls.vehicular.red = bindWriter(&vehicularRed);
   config.signalHeadControls.vehicular.amber = bindWriter(&vehicularAmber);
@@ -57,11 +62,12 @@ int main() {
   config.cyclePhases.vehicular.amberClearanceTimeMs = 3000;
   config.cyclePhases.vehicular.redClearanceTimeMs = 2000;
 
-  System system(config);
+  return config;
+}
 
-  system.start();
-  while (true) {
-    system.update(10);
-    PicoW::sleep_ms(10);
-  }
+int main() {
+  PicoW::initialize();
+  System::Config config = loadConfig();
+  System system(config);
+  system.run();
 }

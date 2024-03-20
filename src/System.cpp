@@ -7,7 +7,8 @@
 #include "traffic_control/physical_components/signal_head/vehicular_traffic_signal_head/VehicularTrafficSignalHead.hpp"
 
 System::System(System::Config config)
-    : vehicularSignalHead(TrafficControl::VehicularTrafficSignalHead{
+    : updateIntervalMs(config.updateIntervalMs), controller(config.controller),
+      vehicularSignalHead(TrafficControl::VehicularTrafficSignalHead{
           {.flashingIntervalMs = config.aspect.flashingIntervalMs,
            .deviceControls = {.red = config.signalHeadControls.vehicular.red,
                               .amber =
@@ -45,5 +46,12 @@ System::System(System::Config config)
           {.vehicularPhase = &vehicularCyclePhase,
            .pedestrianPhase = &pedestrianCyclePhase}}) {}
 
-void System::start() { pedestrianCrossingSystem.start(); }
-void System::update(int ms) { pedestrianCrossingSystem.update(ms); }
+void System::run() {
+  controller.initialize();
+  pedestrianCrossingSystem.start();
+
+  while (true) {
+    pedestrianCrossingSystem.update(updateIntervalMs);
+    controller.sleepMs(updateIntervalMs);
+  }
+}
