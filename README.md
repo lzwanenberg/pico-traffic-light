@@ -2,10 +2,10 @@
 
 This repository contains code for a basic traffic light system designed for the Raspberry Pico W board. The system includes two signal heads: one for pedestrians and one for vehicular traffic. A push button allows pedestrians to request a green signal.
 
-- [Demo](#other-commands)
 - [Prerequisites](#preqrequisites)
 - [Installation](#installation)
 - [Other commands](#other-commands)
+- [Demo](#other-commands)
 
 ## Prerequisites
 
