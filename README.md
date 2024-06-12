@@ -7,10 +7,6 @@ This repository contains code for a basic traffic light system designed for the 
 - [Installation](#installation)
 - [Other commands](#other-commands)
 
-## Demo
-
-https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/7a1c173c-b91b-457a-b4fb-cbfd0717aa88
-
 ## Prerequisites
 
 - Unix-like environment
@@ -32,3 +28,7 @@ https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/7a1c173c-b91b-4
 ./run/clean.sh # remove build directory
 ./run/copy.sh # copy .uf2 file to Pico
 ```
+
+## Demo
+
+https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/7a1c173c-b91b-457a-b4fb-cbfd0717aa88
