@@ -27,3 +27,9 @@ Study project for learning C++ and embedded programming.
 ./run/clean.sh # remove build directory
 ./run/copy.sh # copy .uf2 file to Pico
 ```
+
+## Demo
+
+https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/46e571f5-b44d-4df0-8228-2645047bc601
+
+
