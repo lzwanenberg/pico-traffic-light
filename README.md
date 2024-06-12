@@ -1,10 +1,15 @@
 # Raspberry Pico Traffic Light
 
-Study project for learning C++ and embedded programming.
+This repository contains code for a basic traffic light system designed for the Raspberry Pico W board. The system includes two signal heads: one for pedestrians and one for vehicular traffic. A push button allows pedestrians to request a green signal.
 
+- [Demo](#other-commands)
 - [Prerequisites](#preqrequisites)
 - [Installation](#installation)
 - [Other commands](#other-commands)
+
+## Demo
+
+https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/7a1c173c-b91b-457a-b4fb-cbfd0717aa88
 
 ## Prerequisites
 
@@ -27,7 +32,3 @@ Study project for learning C++ and embedded programming.
 ./run/clean.sh # remove build directory
 ./run/copy.sh # copy .uf2 file to Pico
 ```
-
-## Demo
-
-https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/7a1c173c-b91b-457a-b4fb-cbfd0717aa88
