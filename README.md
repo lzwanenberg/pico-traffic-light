@@ -30,6 +30,4 @@ Study project for learning C++ and embedded programming.
 
 ## Demo
 
-https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/46e571f5-b44d-4df0-8228-2645047bc601
-
-
+https://github.com/lzwanenberg/pico-traffic-light/assets/5617056/7a1c173c-b91b-457a-b4fb-cbfd0717aa88
